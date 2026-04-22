@@ -17,6 +17,13 @@
 
 ## Что сейчас опубликовано
 
+### M1 — Промптинг и модели
+
+- **[Полезные ресурсы Модуля 1](M1/resources.md)** — все ссылки в одном месте: сервисы выбора моделей (Artificial Analysis, OpenRouter, LM Arena), мета-промпты, документация, провайдеры, скиллы.
+- **[Эволюция промптинга](M1/prompting-evolution-explanation.md)** — как менялся промптинг с 2022 по 2026: от "47 прилагательных" до скиллов и агентов.
+- **[INoT — техника промптинга](M1/inot-prompting-technique.md)** — дебат внутри одного промпта: +8% качества при −58% токенов vs классический multi-agent.
+- **[API параметры — справка](M1/api-parameters-explanation.md)** — что за Temperature / Top P / Penalty / seed / response_format, когда крутить, сравнение моделей 2026.
+
 ### M2 — AI-IDE
 
 - **[Rules-файлы по 10 AI-IDE — справочник](M2/rules-files-per-ide.md)** — одна страница на каждую IDE (Claude Code, Cursor, Codex CLI, OpenCode, Windsurf, Gemini CLI, Antigravity, Copilot, JetBrains Junie, Warp): что создать, куда положить, как не сломать. + 10 готовых templates.
