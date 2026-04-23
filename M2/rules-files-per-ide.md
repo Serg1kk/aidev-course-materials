@@ -263,6 +263,17 @@ alwaysApply: false
 
 **Файл:** `AGENTS.md` — нативный. Codex — один из родоначальников формата (плюс Amp, Jules, Cursor, Factory).
 
+> ⚠️ **Важно:** `AGENTS.md` **технически не обязателен** — Codex (и CLI, и App) работает без него на дефолтах. Но для сдачи M2 файл **должен лежать в репо** — это ядро домашки.
+
+**CLI vs App — два разных способа запустить bootstrap:**
+
+| Режим | Команда | Что делает |
+|---|---|---|
+| **Codex CLI** | `/init` в корне | Опциональный scaffold-командой. Codex анализирует репо и создаёт `AGENTS.md`. |
+| **Codex App / ChatGPT cloud Codex** | Slash-команды `/init` нет. Пишешь текстом: *«Посмотри проект и создай AGENTS.md в корне с секциями: Overview, Tech Stack, Architecture, Commands, Conventions, What NOT to do»* | Codex сам читает репо и генерит файл. Дальше тот же цикл ручной доработки. |
+
+В обоих случаях после автогена — обязательно дописать руками unwritten rules (~70% работы), которые AI не мог инферить из кода.
+
 **Опционально:** `AGENTS.override.md` — для **временных** отклонений. Пример: «на этой неделе форсим TypeScript strict, потом уберём».
 
 **Формат:** обычный Markdown. Никакого frontmatter, никаких особых директив.
@@ -319,8 +330,6 @@ alwaysApply: false
 ---
 
 ### 3.4. OpenCode
-
-> Примечание: Дмитрий Добротворский активно использует OpenCode через BYOK (bring-your-own-keys) с Z.AI GLM и OpenRouter.
 
 **Файл:** `AGENTS.md` — нативный.
 
@@ -461,7 +470,8 @@ alwaysApply: false
 - `/memory add <text>` — append в global `~/.gemini/GEMINI.md` на лету
 
 **Bootstrap:**
-- Нет `/init`, который бы генерил GEMINI.md автоматически — пишешь руками или через промпт «Create GEMINI.md for this repo».
+- **`/init` в корне** (с июля 2025) — Gemini CLI анализирует репо и создаёт `GEMINI.md`. Идемпотентен: если файл уже есть, не перезаписывает.
+- Альтернатива (App / web-режимы без slash): попроси агента текстом *«Посмотри проект и создай GEMINI.md в корне с секциями: Overview, Tech Stack, Architecture, Commands, Conventions, What NOT to do»*.
 
 **Portability:**
 - **Через `settings.json`** расширяемо до любых имён:
@@ -519,8 +529,10 @@ alwaysApply: false
 **Лимиты:** не опубликован. Community — lean.
 
 **Bootstrap:**
-- Customizations panel → + Global / + Workspace → Rule name → содержимое.
-- Или руками.
+- Slash-команды `/init` нет. Варианты:
+  - **App-режим:** попроси агента текстом *«Посмотри проект и создай GEMINI.md в корне с секциями: Overview, Tech Stack, Architecture, Commands, Conventions, What NOT to do»* (либо `AGENTS.md` — Antigravity с v1.20.3 читает оба).
+  - **GUI:** Customizations panel → + Global / + Workspace → Rule name → содержимое.
+  - Руками — обычный markdown в корне репо.
 
 **Portability:**
 - С v1.20.3 — `AGENTS.md` нативный ✅
