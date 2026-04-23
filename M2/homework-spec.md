@@ -70,11 +70,12 @@
 |---|---|
 | Claude Code | `CLAUDE.md` |
 | Cursor | `.cursor/rules/*.mdc` (legacy `.cursorrules` тоже ок) |
-| Codex CLI / OpenCode / OpenClaw | `AGENTS.md` |
+| Codex CLI / Codex App / OpenCode / OpenClaw | `AGENTS.md` (опционально, см. ниже) |
 | VS Code + Copilot | `.github/copilot-instructions.md` |
 | JetBrains + Junie | `.junie/AGENTS.md` или `AGENTS.md` в корне |
 | Gemini CLI | `GEMINI.md` |
-| Warp | `AGENTS.md` (caps) |
+| Antigravity (Google) | `GEMINI.md` и/или `AGENTS.md` в корне (с v1.20.3 читает оба) |
+| Warp | `AGENTS.md` (заглавными — обязательно) |
 | Windsurf | `.windsurf/rules/*.md` (Wave 8+, legacy `.windsurfrules` тоже ок) |
 
 **Не уверен какой у тебя формат?**
@@ -83,15 +84,30 @@
 
 ### Как делать
 
-**Шаг 1 — автоген.** В своей IDE запусти встроенную генерацию скелета rules-файла:
-- Claude Code: `/init` в корне проекта.
-- Cursor: `/rules` в терминале (январь 2026) или вставь промпт в Agent mode (см. ниже).
-- Codex CLI: `/init` в корне — генерирует `AGENTS.md` (точный аналог Claude Code `/init`).
-- JetBrains Junie: кнопка "Create project guidelines" в IDE → `.junie/AGENTS.md`. Есть каталог готовых шаблонов по стекам: github.com/JetBrains/junie-guidelines
-- Copilot: спроси агента "Generate copilot-instructions.md for this repo" или при первом PR агент сам предложит.
-- Windsurf: нет встроенного `/init`, используй промпт.
-- Gemini CLI: нет встроенного `/init`, используй промпт.
-- Если у твоей IDE нет встроенного автогена — дай ей промпт:
+**Шаг 1 — автоген.**
+
+> ⚠️ **Важно для сдачи домашки:** rules-файл (`AGENTS.md` / `CLAUDE.md` / `GEMINI.md` / `.cursor/rules/*.mdc` — что подходит для твоей IDE) **должен лежать в репо**. Даже если сам инструмент технически работает без него (например, Codex App или Antigravity) — для оценки M2 файл обязателен. Это ядро домашки.
+
+В разных IDE автоген запускается по-разному. Главный split — **CLI** (есть slash-команда `/init`) vs **App / cloud-агент** (slash-команды нет, нужно попросить агента текстом):
+
+#### CLI-инструменты (есть встроенный `/init`)
+- **Claude Code (CLI):** `/init` в корне проекта → `CLAUDE.md`.
+- **Codex CLI:** `/init` в корне → `AGENTS.md`. Для домашки — обязательно запусти.
+- **Gemini CLI:** `/init` в корне → `GEMINI.md` (команда добавлена в июле 2025).
+- **Warp:** `/init` в корне → индексирует кодбазу + создаёт `AGENTS.md` (заглавные обязательны). При первом открытии git-репо Warp сам предложит запустить init flow.
+- **Cursor:** `/create-rule` в Agent chat (старая `/rules` уже не работает) → `.cursor/rules/*.mdc` с frontmatter. Не классический `/init`, но рабочий аналог.
+
+#### App / cloud-агенты (slash-команды `/init` нет — нужно попросить текстом)
+
+В этих IDE нет встроенной `/init`. Открываешь проект, отправляешь агенту текстовый запрос — он читает репо и создаёт файл. Для сдачи домашки этот шаг **обязателен**:
+
+- **Codex App / ChatGPT cloud Codex:** *«Посмотри проект и создай AGENTS.md в корне со следующими секциями: Overview, Tech Stack, Architecture, Commands, Conventions, What NOT to do»* → Codex сам прочитает репо и создаст файл.
+- **Antigravity (Google):** аналогично — *«Посмотри проект и создай GEMINI.md в корне с секциями…»* (или `AGENTS.md` — Antigravity с v1.20.3 читает оба, `GEMINI.md` приоритетнее при конфликте).
+- **JetBrains Junie:** кнопка "Create project guidelines" в IDE → `.junie/AGENTS.md`. Есть каталог готовых шаблонов по стекам: github.com/JetBrains/junie-guidelines
+- **Copilot:** спроси агента *"Generate copilot-instructions.md for this repo"* → `.github/copilot-instructions.md`. При первом PR агент сам предложит.
+- **Windsurf:** нет встроенного `/init`, используй промпт ниже.
+
+Если у твоей IDE нет встроенного автогена ИЛИ ты в App-режиме без slash-команд — дай агенту такой промпт:
 
 ```
 Проанализируй весь репо. Создай файл [AGENTS.md / CLAUDE.md / .cursor/rules/main.mdc] со следующими секциями:
@@ -331,15 +347,27 @@ CONSTRAINTS:
 
 **Справочник: аналоги `/init` в разных IDE**
 
-| IDE | Как запустить автоген | Файл | Особенности |
-|-----|----------------------|------|-------------|
-| **Claude Code** | `/init` в корне проекта | `CLAUDE.md` | Иерархия: глобальный `~/.claude/CLAUDE.md` → проектный → подпапки |
-| **Codex CLI** | `/init` в корне | `AGENTS.md` | Точный аналог CC. `AGENTS.override.md` для временного override |
-| **Cursor** | `/rules` в терминале (2026) или вставь промпт в Agent mode | `.cursor/rules/*.mdc` | Несколько файлов с frontmatter: `alwaysApply`, `globs`, `description`. Legacy `.cursorrules` deprecated |
+> ⚠️ **Для сдачи M2:** rules-файл **обязательно лежит в репо**, независимо от того, обязателен ли он самой IDE. Codex и Antigravity технически могут работать без него — но для оценки нужно показать, что ты прошёл через автоген + ручную доработку.
+
+#### CLI-инструменты (есть встроенный `/init`)
+
+| IDE | Как запустить | Файл | Особенности |
+|-----|---------------|------|-------------|
+| **Claude Code (CLI)** | `/init` в корне | `CLAUDE.md` | Иерархия: глобальный `~/.claude/CLAUDE.md` → проектный → подпапки |
+| **Codex CLI** | `/init` в корне | `AGENTS.md` | Иерархия: `~/.codex/AGENTS.md` (глобальный) → repo `AGENTS.md` → подпапки. `AGENTS.override.md` для временного override. Fallback-имена через `project_doc_fallback_filenames` в `~/.codex/config.toml`. Технически не требует AGENTS.md — но для домашки обязательно |
+| **Gemini CLI** | `/init` в корне | `GEMINI.md` | Команда добавлена в июле 2025. `/memory show` — посмотреть что загружено. `/memory add` — добавить на лету. Идемпотентен: не перезаписывает существующий `GEMINI.md` |
+| **Warp** | `/init` в корне (или авто-flow при первом открытии git-репо) | `AGENTS.md` (CAPS!) | Имя файла — строго заглавными, иначе Warp не найдёт. Legacy `WARP.md` тоже работает. `/init` умеет линковать существующие `CLAUDE.md`, `.cursorrules`, `GEMINI.md`, `.windsurfrules`, `.github/copilot-instructions.md` в `AGENTS.md` |
+| **Cursor** | `/create-rule` в Agent chat (или Settings → Rules → + Add Rule) | `.cursor/rules/*.mdc` | Не классический `/init`, но рабочий аналог. Несколько файлов с frontmatter: `alwaysApply`, `globs`, `description`. Legacy `.cursorrules` deprecated |
+
+#### App / cloud-агенты (slash-команды нет — просим агента текстом)
+
+| IDE | Как запустить | Файл | Особенности |
+|-----|---------------|------|-------------|
+| **Codex App / ChatGPT cloud Codex** | Текстовый запрос агенту: *«Посмотри проект и создай AGENTS.md в корне с секциями: Overview, Tech Stack, Architecture, Commands, Conventions, What NOT to do»* | `AGENTS.md` | Codex сам читает репо и генерит файл. В cloud-режиме окружение задаётся через UI: setup scripts, env vars, package versions. Для домашки — файл должен оказаться в репо |
+| **Antigravity (Google)** | Текстовый запрос агенту: *«Посмотри проект и создай GEMINI.md в корне с секциями: …»* (или `AGENTS.md`) | `GEMINI.md` и/или `AGENTS.md` | С v1.20.3 (март 2026) читает **оба** файла. При конфликте `GEMINI.md` побеждает. Глобальные: `~/.gemini/GEMINI.md` или `~/.gemini/AGENTS.md`. Workspace rules: `.agent/rules/*.md`. Nested files в подпапках включаются в Settings → Agent → Load nested AGENTS.md |
 | **JetBrains Junie** | Кнопка "Create project guidelines" в IDE | `.junie/AGENTS.md` | Официальный каталог готовых гайдлайнов по стекам: [junie-guidelines](https://github.com/JetBrains/junie-guidelines) |
-| **Copilot** | Попроси агента: "Generate copilot-instructions.md for this repo" | `.github/copilot-instructions.md` | + path-specific `.github/instructions/*.instructions.md` с `applyTo` glob |
-| **Windsurf** | Нет встроенного, дай промпт | `.windsurf/rules/*.md` (Wave 8+) | GUI-редактор в IDE. Legacy `.windsurfrules` |
-| **Gemini CLI** | Нет встроенного, дай промпт | `GEMINI.md` | `/memory show` — посмотреть что загружено. `/memory add` — добавить на лету |
+| **Copilot** | Текстовый запрос: *"Generate copilot-instructions.md for this repo"* | `.github/copilot-instructions.md` | + path-specific `.github/instructions/*.instructions.md` с `applyTo` glob. При первом PR агент сам предложит создать |
+| **Windsurf** | Нет встроенного, дай промпт ниже | `.windsurf/rules/*.md` (Wave 8+) | GUI-редактор в IDE. Legacy `.windsurfrules` |
 
 **Ключевой инсайт про AGENTS.md:** большинство IDE (Codex, Copilot, Cursor, Windsurf, Amp, Devin) читают `AGENTS.md` нативно. Claude Code — нет (использует только `CLAUDE.md`). Если работаешь в нескольких IDE — можно держать один `AGENTS.md` как источник правды и симлинковать:
 ```bash
