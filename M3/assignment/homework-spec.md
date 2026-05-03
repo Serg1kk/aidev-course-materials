@@ -328,18 +328,51 @@ feature-flags MCP. Если она в статусе Disabled — перевед
 
 ```
 Подними локально Weaviate в Docker (любым образом — docker compose,
-docker run). Открой dashboard и проверь что работает.
+docker run). После старта проверь что контейнер запущен и Weaviate
+отвечает: открой http://localhost:8080/v1/meta в браузере.
 ```
 
-или
+> ℹ️ У Weaviate **нет встроенной web-морды** в локальной поставке — вы просто увидите JSON-ответ от API на страничке (например `/v1/meta` вернёт версию и конфиг). Это нормально, значит сервер работает. Для UI можно поднять отдельно `weaviate-ui` (контейнер от community), но для HW не требуется.
+
+или **Postgres + pgvector локально** (это и есть основа Supabase — Supabase под капотом даёт Postgres с pgvector extension):
 
 ```
-Используй Supabase pgvector free tier: подскажи какие шаги для setup
-(создать проект, включить pgvector extension, получить connection
-string в .env). Я не хочу поднимать локально.
+Подними локально Postgres с pgvector extension в Docker. Можно
+несколько способов:
+
+1. Готовый образ pgvector/pgvector:pg17 — единственная команда
+   docker run + он сразу включает extension. Самый быстрый путь.
+2. Обычный postgres:17 + потом руками включить pgvector extension
+   (CREATE EXTENSION IF NOT EXISTS vector;) — через SQL-скрипт или
+   через psql, агент сам запустит.
+3. Docker compose с supabase/postgres image — если хочется ровно
+   супабейсовский стек.
+
+Выбери самый простой способ под мой setup. После запуска подключись
+через psql или DBeaver, проверь что extension доступен (\dx должен
+показать vector). Логин/пароль положи в .env, connection string
+тоже туда.
 ```
 
-или **LightRAG** — graph RAG, см. `M3/guides/vector-db-comparison-2026.md`.
+или **LightRAG (graph RAG)** — опционально, если хочется поиграться с графовым подходом вместо классического vector search:
+
+```
+Подними LightRAG в Docker по гайду из репозитория hkuds/LightRAG.
+Это не классическая векторная база — chunks при ingest проходят
+через LLM который извлекает entities и relations, кладёт в граф.
+Запросы поддерживают 5 режимов: naive / local / global / hybrid / mix.
+Подходит когда вопросы multi-hop (связи между фичами / зависимости).
+
+Ingest и query будут заметно дороже по LLM-токенам — заранее посчитай
+бюджет. См. M3/guides/vector-db-comparison-2026.md перед стартом.
+```
+
+> ℹ️ **Cloud free tier как альтернатива локальному Docker.** Не хочется поднимать у себя — все три основных сервиса дают бесплатно поиграться через облачную регистрацию, можно залить туда данные и подёргать поверх:
+> - **Qdrant Cloud** — https://cloud.qdrant.io (free tier — 1 GB cluster, без credit card)
+> - **Weaviate Cloud Services** — https://console.weaviate.cloud (sandbox free tier — 14 дней, без credit card)
+> - **Supabase** — https://supabase.com (free tier — 500 MB database, pgvector включается одной кнопкой в SQL editor)
+>
+> Внутри агента — можно дёрнуть проверку через **Exa MCP сервер** (если у тебя подключен): попросить агента проверить актуальные free-tier лимиты на сайте провайдера, чтобы не упереться в платный план посреди HW. На задание это не влияет — что использовал, упомяни в `report.md`.
 
 #### Шаг 2.2 — Подготовить данные (chunking + метадата) через брейншторм с агентом
 
@@ -415,8 +448,11 @@ docs/project-data (или любую другую — на твой выбор, 
 Можно любой готовый клиент. Если используешь LangChain / LlamaIndex —
 тоже ОК, у них есть VectorStore wrappers.
 
-После запуска — открой Qdrant dashboard и убедись что коллекция
-создана и в ней нужное количество векторов.
+После запуска — открой dashboard выбранной БД (Qdrant dashboard /
+Weaviate UI / Supabase Studio / pgAdmin для pgvector / etc.) и
+убедись что коллекция создана и в ней нужное количество векторов.
+Если у БД нет UI (как у обычного Weaviate) — проверь через её API
+напрямую (curl/REST или клиент которым пользуешься).
 ```
 
 #### Шаг 2.5 — Написать query script + протестировать через API
