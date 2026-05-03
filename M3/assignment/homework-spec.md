@@ -46,17 +46,14 @@
 | IDE | Project-level (рекомендуется для сдачи) | Global |
 |---|---|---|
 | **Claude Code** | `.mcp.json` в корне репо | `~/.claude/settings.json` |
-| **Claude Desktop** | (только global — нет project-level) | `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS) / `%APPDATA%\Claude\claude_desktop_config.json` (Windows) |
 | **Cursor** | `.cursor/mcp.json` в корне репо | `~/.cursor/mcp.json` |
 | **VS Code (Copilot)** | `.vscode/mcp.json` в корне репо | platform-specific |
 | **Codex CLI** | `.codex/config.toml` в корне (TOML, не JSON) | `~/.codex/config.toml` |
-| **Windsurf (Cascade)** | (только global) | `~/.codeium/windsurf/mcp_config.json` |
+| **Windsurf (Cascade)** | нет нативного project-level — **скопируйте файл из `~/.codeium/windsurf/mcp_config.json` в корень репо** (например, как `mcp_config.json` или `windsurf-mcp.json`), чтобы я видел вашу настройку | `~/.codeium/windsurf/mcp_config.json` |
 | **OpenCode** | `opencode.json` в корне | `~/.config/opencode/opencode.json` |
 | **Gemini CLI** | `.gemini/settings.json` в корне | `~/.gemini/settings.json` |
-| **Cline (VS Code extension)** | через UI Cline | `~/Library/Application Support/Code/User/globalStorage/saoudrizwan.claude-dev/settings/cline_mcp_settings.json` |
-| **Zed** | (только global) | `~/.config/zed/settings.json` (ключ `context_servers`, не `mcpServers`) |
 
-**Сдавайте project-level конфиг** (если IDE поддерживает) — он попадает в репо вместе с кодом, я вижу настройку. Если ваша IDE только global — упомяните это в `report.md` и приложите снимок конфига как код-блок.
+**Сдавайте project-level конфиг** (если IDE поддерживает) — он попадает в репо вместе с кодом, я вижу настройку. Если ваша IDE только global (например Windsurf) — просто скопируйте этот файл и положите в корень репо, чтобы я мог проверить.
 
 ---
 
