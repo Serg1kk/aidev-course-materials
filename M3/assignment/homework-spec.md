@@ -34,7 +34,7 @@
 7. **Обновлённые rules-файлы для агента** (`CLAUDE.md` / `AGENTS.md` / `.cursor/rules/*.mdc` — что у вас в проекте) с инструкцией: на вопросы про продукт `proshop_mern` агент **сначала** идёт в search-docs MCP (vector DB), и **только если там не нашлось** — fallback на чтение файлов через grep+read. Это то, что я делал на G1 в CLAUDE.md одной строкой, см. подробнее в Части 3.
 8. **`report.md`** в корне — секция `## M3` с логами обоих MCP (генерируются агентом по двум готовым промптам из Части 3) + reflection (stack choice, что было сложно, что бы изменили).
 
-**Quadrant / Weaviate / pgvector — поднимать не надо.** Я не дотянусь до твоей БД. Чанки в репо + логи search-MCP с top-K результатами в `report.md` — self-sufficient.
+**Vector DB поднимаешь сам** (локально в Docker или облачный free tier — на твой выбор, оба варианта ОК). **Я к твоей БД не дотягиваюсь** — проверять буду по логам в `report.md` (там видно top-K чанки которые вернул search-docs MCP) + по `chunks.jsonl` в репо (видно качество разбивки и метаданных). Этого достаточно.
 
 **MCP framework / Vector DB / Embedding — любые на выбор.** Жёсткой привязки нет:
 - MCP framework: Python FastMCP / TS SDK / mcp-framework / Go / Java / .NET MCP — что удобно.
