@@ -65,10 +65,10 @@ Stop when the UI matches DESIGN_SYSTEM.md. Report what you changed.
 
 Вариация C требует подключённого Playwright MCP — агент делает скриншоты сам, без участия человека.
 
-## Источник
+## Контекст
 
-Паттерн screenshot-back-into-context подтверждён независимо несколькими практиками vibe-coding (2026): Sabrina Ramonov, David Ondrej, Leon van Zyl. В Claude Code: `Ctrl+V` для вставки изображения из буфера работает нативно.
+Паттерн screenshot-back-into-context подтверждён в нескольких независимых практиках vibe-coding 2026 года. В Claude Code: `Ctrl+V` для вставки изображения из буфера работает нативно.
 
 ## Связь с курсом
 
-Блок M4 F8 (практика итераций на дизайне) и связь с M3 (Playwright MCP + visual verification). Вариация C — прямая реализация sub-agent review паттерна (Leon van Zyl) из F7 DESIGN.md блока. Это замыкание петли: DESIGN_SYSTEM.md задаёт стандарт, screenshot-loop его верифицирует.
+Блок M4 F8 (практика итераций на дизайне) и связь с M3 (Playwright MCP + visual verification). Вариация C — прямая реализация sub-agent review паттерна из F7 DESIGN.md блока. Это замыкание петли: DESIGN_SYSTEM.md задаёт стандарт, screenshot-loop его верифицирует.

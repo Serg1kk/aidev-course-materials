@@ -78,9 +78,9 @@ UX Structure Plan форсирует осознанные решения ДО н
 **Tip: сохрани план в файл.**
 Положи UX Structure Plan в `docs/design/[feature-name]/ux-structure.md`. Step 2 (Component Mapping) будет ссылаться на него явно.
 
-## Источник
+## Контекст
 
-Шаг 1 из трёхшагового shadcn pipeline, описанного Eric Tech в видео "Shadcn UI Agent: The Fix for Broken, AI-Generated UIs" (YouTube канал Eric Tech, 2026). Детали в KB research: `lessons/lesson4/materials/kb-research/query2-frontend-agents-workflows/findings.md`, раздел 2 "Eric Tech shadcn pipeline".
+Шаг 1 из трёхшагового shadcn pipeline (UX Structure → Component Mapping → Implementation). На этом шаге фиксируется UX-логика в виде структурированного плана — без единой строки кода. Дальше планы переходят в Step 2 (Component Mapping через shadcn MCP) и Step 3 (Implementation с правилом «blocks > components»).
 
 ## Связь с курсом
 

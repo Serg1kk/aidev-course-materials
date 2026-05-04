@@ -5,7 +5,7 @@
     "version": "1.0.0",
     "philosophy": "Technical clarity over visual flair. Every design decision serves legibility and function.",
     "export_format": "JSON + CSS + Markdown bundle",
-    "source_pattern": "TripleA ZIP export pattern (Vibe SaaS series #7-#8, January 2026)",
+    "source_pattern": "ZIP export pattern (JSON + CSS + Markdown bundle for AI agents)",
     "shadcn_compatible": true,
     "tailwind_version": "4"
   },

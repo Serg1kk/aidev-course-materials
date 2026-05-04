@@ -4,7 +4,7 @@
 > Aesthetic: dark, functional, high-density data interface
 > Format: shadcn/ui + Tailwind CSS 4 + CSS variables
 > Last updated: 2026-05-03
-> Inspiration: Nick Krzemienski (WithAgents) — 21-screen SaaS dashboard built in one evening
+> Reference aesthetic: Linear, Vercel dashboard, Raycast — generous spacing + restrained palette
 
 ---
 
@@ -117,8 +117,7 @@ Tailwind mapping: `rounded-none` / `rounded-sm` (4px) / `rounded-md` (8px) /
 **Philosophy: NO box shadows by default. Depth from background contrast.**
 
 This creates a layered, architectural feel without visual noise — characteristic
-of Linear, Vercel dashboard, and Raycast. (Inspired by Krzemienski's approach:
-«NO shadows — depth from background contrast only».)
+of Linear, Vercel dashboard, and Raycast. Rule: «NO shadows — depth from background contrast only».
 
 3-level elevation system:
 - **Level 0 (page):** `--background` (`#0f172a`) — the base canvas

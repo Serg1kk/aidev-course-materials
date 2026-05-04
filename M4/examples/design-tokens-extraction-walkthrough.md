@@ -1,14 +1,14 @@
 # Walkthrough: Извлечение DESIGN_SYSTEM.md из скриншота
 
-> Пошаговый разбор — как взять скриншот референса (например, Stripe pricing) и за 5-10 минут получить готовый DESIGN_SYSTEM.md под shadcn/ui + Tailwind. Паттерн от Refat Ametov.
+> Пошаговый разбор — как взять скриншот референса (например, Stripe pricing) и за 5-10 минут получить готовый DESIGN_SYSTEM.md под shadcn/ui + Tailwind.
 
 ---
 
 ## Зачем это нужно
 
-Bayram Annakov, verbatim:
+Базовая идея простая:
 
-> «Я по-русски и по-английски не смог бы описать, что такое Apple Style. Но заскриншотить — это я могу.»
+> «Описать словами, что такое Apple Style — почти невозможно. А заскриншотить — можно за две секунды.»
 
 Это честное признание, которое работает как инструкция.
 
@@ -295,7 +295,7 @@ Refine the DESIGN_SYSTEM.md:
 - AI следует токенам (`var(--primary)`) вместо угадывания
 - После функционального рефакторинга — стиль не трогается (он в tokens)
 
-Nick Krzemienski, WithAgents — сделал 21-screen SaaS dashboard за один вечер именно потому, что **весь design system шёл в каждый промпт verbatim**. Его вывод:
+В одном из публичных кейсов разработчик собрал 21-screen SaaS dashboard за один вечер именно потому, что **весь design system шёл в каждый промпт verbatim**. Вывод:
 
 > «Prompts aren't instructions. They're build artifacts. When the tokens change, the prompt changes.»
 
@@ -316,11 +316,9 @@ Nick Krzemienski, WithAgents — сделал 21-screen SaaS dashboard за од
 
 ---
 
-## Источники паттерна
+## Контекст паттерна
 
-- **Bayram Annakov** — Apple Style screenshot trick (публичное видео, 2025-09-25)
-- **Refat Ametov** (@nobilix_chat — публичный TG) — DESIGN_SYSTEM.md extraction prompt
-- **Alexey Andreevsky + Ринат Абдуллин** — двухшаговый style guide pattern
+Двухшаговое извлечение style guide из скриншота — повторяющийся приём в практике vibe-coding 2026: сначала «понять стиль» (reverse-design prompt по скриншоту), потом «применить стиль» (генерация UI с DESIGN_SYSTEM.md в контексте). Делать оба шага в одном промпте резко снижает качество обоих.
 
 ---
 

@@ -72,9 +72,9 @@ Shadcn blocks — это готовые составные секции: login f
 **Вариация для форм:**
 Для секций с формами добавь: `For form sections, also specify: which validation library (Zod + react-hook-form is shadcn default), and which Form components from shadcn are needed (Form, FormField, FormItem, FormControl, FormMessage).`
 
-## Источник
+## Контекст
 
-Шаг 2 из трёхшагового shadcn pipeline, Eric Tech, "Shadcn UI Agent: The Fix for Broken, AI-Generated UIs" (YouTube канал Eric Tech, 2026).
+Шаг 2 из трёхшагового shadcn pipeline (UX Structure → Component Mapping → Implementation).
 
 shadcn MCP server: официальный MCP от команды shadcn/ui. Инструменты: `get_component`, `get_blocks`, `list_components`. Без GitHub-токена: 60 запросов/час. С токеном: 5000 запросов/час.
 

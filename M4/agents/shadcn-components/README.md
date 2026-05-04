@@ -42,6 +42,3 @@ Shadcn project config с **35+ registries** — каталог всех дост
 реализация). Это эталонный пример того, как Component Researcher должен
 действовать.
 
-## Источник
-
-Файлы взяты из `Serg1kk/X0-Framework` (`.x0/agents/prompts/specialized/shadcn/`).

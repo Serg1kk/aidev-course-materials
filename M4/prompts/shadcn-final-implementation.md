@@ -98,15 +98,15 @@ Are there any deprecated props? Any missing required props?
 **Вариация для data tables:**
 Если в маппинге есть DataTable block: `Use the shadcn data-table block as the base. Customize columns for [your data shape]. Keep all built-in features (sorting, filtering, pagination).`
 
-## Источник
+## Контекст
 
-Шаг 3 из трёхшагового shadcn pipeline, Eric Tech, "Shadcn UI Agent: The Fix for Broken, AI-Generated UIs" (YouTube канал Eric Tech, 2026). Правило "blocks > components" взято дословно из оригинального описания pipeline.
+Шаг 3 из трёхшагового shadcn pipeline (UX Structure → Component Mapping → Implementation). Правило «blocks > components» — ключевая идея этого шага.
 
 shadcn blocks документация: официальный раздел shadcn/ui. Доступен через MCP инструмент `get_blocks`.
 
 ## Связь с курсом
 
-**M4, блок F6 (0:33-0:38):** "Eric Tech 3-step: UX план → Component Mapping (через MCP) → Имплементация (blocks > components)."
+**M4, блок F6 (0:33-0:38):** «3-step pipeline: UX план → Component Mapping (через MCP) → Имплементация (blocks > components).»
 
 Это третий и финальный промпт shadcn pipeline. Используй последовательно:
 1. `shadcn-ux-structure-plan.md` — зафиксировать структуру

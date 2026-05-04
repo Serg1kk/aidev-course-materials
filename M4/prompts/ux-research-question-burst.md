@@ -58,11 +58,9 @@ Question Burst кристаллизует ЧТО. ASCII Wireframe фиксиру
 **Tip: не пропускай edge cases.**
 Самые ценные вопросы про состояния: пустая БД, ошибка сети, нет прав доступа, контент слишком длинный. AI по умолчанию проектирует happy path — Question Burst это исправляет.
 
-## Источник
+## Контекст
 
-Паттерн популяризован Naila Aglitskaya в контексте AI-assisted UX design. Зафиксирован в KB research как часть "UX/UI brainstorming agents" паттернов.
-
-Смотри также: `lessons/lesson4/materials/kb-research/query2-frontend-agents-workflows/findings.md`, раздел 5 "UX-паттерны".
+Question Burst — паттерн из «UX/UI brainstorming agents» практик 2026: вместо того, чтобы сразу генерить UI, агент сначала задаёт фиксированный набор вопросов о пользователе, контексте использования и edge cases. Без этого шага AI проектирует happy path и пропускает empty/error/loading-состояния.
 
 ## Связь с курсом
 

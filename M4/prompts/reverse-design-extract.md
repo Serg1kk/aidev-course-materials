@@ -92,9 +92,9 @@ Document as shadcn/ui + Tailwind CSS 4 + CSS variables.
 Capture the intentional irregularities, not just the averages.
 ```
 
-## Источник
+## Контекст
 
-Refat Ametov — Design Principles и DESIGN_SYSTEM.md extraction prompt (через сообщество vibe-coding практиков, 2026). Паттерн двухшагового извлечения — Alexey Andreevsky + Ринат Абдуллин.
+Двухшаговый паттерн извлечения дизайн-системы из скриншота — повторяющийся приём в практике vibe-coding 2026: сначала reverse-design prompt → DESIGN_SYSTEM.md, потом генерация UI с этим файлом в контексте.
 
 ## Связь с курсом
 

@@ -92,9 +92,9 @@ Reset. Here is my exact style specification:
 Build hero section ONLY. Nothing else. Stop after hero and wait for feedback.
 ```
 
-## Источник
+## Контекст
 
-Pedro Matos Costa (Lovable Pro) — design buzzwords как sliders, user journey в промпте. idlen.io/blog — «Build by component, not full pages». docs.lovable.dev — «I am frustrated» pattern. Описания visual directions — сообщество Lovable + Stormy AI (2026).
+Промпт собирает несколько повторяющихся приёмов из практики Lovable / Bolt / Claude Design 2026: design buzzwords как «слайдеры», user journey в начале промпта, «Build by component, not full pages», pattern «I am frustrated» для сброса контекста. См. [docs.lovable.dev](https://docs.lovable.dev) — Plan Mode и AGENT.md.
 
 ## Связь с курсом
 

@@ -24,8 +24,6 @@ AI-агент хранит историю разговора в контекст
 
 **Эффект длинного хвоста:** чем длиннее диалог, тем больше «мусора» в начале. Агент тратит токены на переработку нерелевантного контекста вместо работы над задачей.
 
-> Источник паттерна: обзоры Lovable и Claude Code от ноября 2025 — апреля 2026, NotebookLM synthesis.
-
 ---
 
 ## Решение: 3-4 milestone с /clear
@@ -177,14 +175,11 @@ Do not add files to context unless actively needed.
 
 ## Cross-refs
 
-- `guides/design-md-as-2026-standard.md` — почему DESIGN.md дрейфует и как Leon van Zyl это решает
+- `guides/design-md-as-2026-standard.md` — почему DESIGN.md дрейфует и как sub-agent enforcement это решает
 - `guides/pixel-perfect-verification.md` — финальный аудит после M4
 - `guides/shadcn-pipeline.md` — shadcn компоненты для M2 milestone
 - `guides/tools-landscape-2026.md` — Milestone + /clear упомянут в context Lovable best practices
 
 ## Источники
 
-- docs.lovable.dev — Plan Mode и milestone паттерн
-- Leon van Zyl: UI reviewer subagent pattern, YouTube, 2025-08-18
-- Cole Medin: context management в длинных сессиях, YouTube `gmaHRwijOXs`, 2026-03-25
-- NotebookLM synthesis: «деменция агента» как повторяющийся pain point (2025-11 — 2026-04)
+- [docs.lovable.dev](https://docs.lovable.dev) — Plan Mode и milestone паттерн

@@ -24,7 +24,7 @@
 | Корпорация со своей дизайн-системой | **Свои компоненты + shadcn-style API** | Стандартизация важнее уникальности каждого проекта |
 | Команда на Figma, дизайнер работает в shadcn UI Kit | **shadcn MCP + Figma MCP** | 100% маппинг: Figma компонент → shadcn компонент, без галлюцинаций |
 | Анимированные компоненты (hero, scroll effects) | **shadcn + Aceternity/Magic UI** | Стандартный shadcn не анимирован; регистры дают Framer Motion компоненты |
-| Production SaaS с auth, платежами, ролями | **CC + shadcn MCP + Eric Tech pipeline** | Browser-builder не закроет production; нужен актуальный API |
+| Production SaaS с auth, платежами, ролями | **CC + shadcn MCP трёхшаговый pipeline** | Browser-builder не закроет production; нужен актуальный API |
 | WebGL, брендовые 3D-объекты, физические анимации | **Кастом + Framer Motion / Three.js** | Регистры это не закрывают; нужен специалист |
 | Корпорация на Salesforce Lightning / SAP UI5 | **CC + контекст компонентов клиента** | Для кастомных фреймворков готовые библиотеки не работают |
 
@@ -72,7 +72,7 @@ Workflow:
 2. Кладёшь в globals.css
 3. Создаёшь DESIGN.md со шрифтом, который не Inter (Manrope / Geist / Space Grotesk)
 4. Добавляешь guard-rails в CLAUDE.md: без shadow-lg, без Inter, без cringe gradients
-5. Запускаешь shadcn MCP pipeline (Eric Tech 3 шага)
+5. Запускаешь трёхшаговый shadcn MCP pipeline (UX Structure → Component Mapping → Implementation)
 
 Результат: UI, который не выглядит как «дефолтный shadcn», без дизайнера и без дополнительных затрат.
 
@@ -192,8 +192,5 @@ shadcn/ui — брать, когда:
 
 ## Источники
 
-- Eric Tech: Shadcn UI Agent pipeline, YouTube `YKJLpgXTxCo`, 2026-03-21
-- Anna Arteeva: On-Brand prototyping — TweakCN workflow, uxplanet.org, 2026-02-22
-- ИИшенка: shadcn MCP + Figma shadcn UI Kit, YouTube `7A2urLxrJq0`, 2025-10-05
-- Monu Kumar: кастом дизайн-система без дизайнера (MonuMoney.in case), 2026-04-22
-- Nate B Jones: strategic review Claude Design, YouTube, 2026-04-24
+- Официальная документация [shadcn/ui](https://ui.shadcn.com), [Radix UI](https://www.radix-ui.com), [TweakCN](https://tweakcn.com)
+- [Aceternity UI](https://ui.aceternity.com), [Magic UI](https://magicui.design), [Cult UI](https://cult-ui.com) — реестры анимированных компонентов

@@ -100,9 +100,9 @@ Start building the first component only. Tell me when it's done.
 Do not start Step 2 until I say "approved".
 ```
 
-## Источник
+## Контекст
 
-ASCII wireframe перед кодом — NotebookLM Q2 ref [16, 17], паттерн из сообщества vibe-coding практиков 2026. Сочетание с запретом типовых структур — Almas (solopreneur). Plan Mode combo — docs.lovable.dev и lovable-prompts.com.
+ASCII wireframe перед кодом — паттерн из сообщества vibe-coding практиков 2026. Сочетание с запретом типовых структур (2-col comparison и т.п.) убирает дефолтные «AI-look» решения. Plan Mode combo — см. [docs.lovable.dev](https://docs.lovable.dev).
 
 ## Связь с курсом
 

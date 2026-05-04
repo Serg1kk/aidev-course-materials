@@ -91,9 +91,9 @@ Pre-flight UI check — verify before generating:
 [ ] All interactive states listed: hover / focus / active / loading / empty
 ```
 
-## Источник
+## Контекст
 
-Almas (solopreneur) — фраза «Be a human designer so it doesn't look like AI. With design taste.» Refat Ametov — Design Principles в Cursor Rules. Monu Kumar (MonuMoney.in) — pre-flight checklist и «constraint specificity is the moat». David Ondrej — «avoid cringe gradients». Подтверждено несколькими независимыми практиками в 2026.
+Каждое правило выше — это устранение конкретного паттерна generic «AI-look»: дефолтный Inter, фиолетовые градиенты, лишние shadow-lg, cringe-emoji вместо иконок и т.д. Принцип «be a human designer with design taste» работает только если в промпте явно перечислены guard-rails — иначе модель скатывается к среднему по обучающим данным.
 
 ## Связь с курсом
 

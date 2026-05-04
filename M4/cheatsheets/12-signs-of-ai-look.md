@@ -6,7 +6,7 @@
 
 ---
 
-## Магическая фраза (Almas)
+## Магическая фраза
 
 > **"Be a human designer so it doesn't look like AI. With design taste."**
 
@@ -61,8 +61,7 @@
 | Editorial / медиа | Inter Display (не дефолтный Inter) |
 | Mono / код | IBM Plex Mono, JetBrains Mono |
 
-> «80% of all digital design is typography. If you leave your font choice to AI,
-> you'll end up with Inter — overused to the point of invisibility.» — Stormy AI
+> 80% of all digital design is typography. If you leave your font choice to AI, you'll end up with Inter — overused to the point of invisibility.
 
 ---
 
@@ -75,11 +74,6 @@
 
 ---
 
-## Источники
+## Контекст
 
-- Almas (X/Twitter) — магическая фраза + 2-col ban
-- Refat Ametov (@nobilix_chat, публичный TG) — spacing, borders, Design Principles
-- David Ondrej (YouTube) — cringe gradients pattern
-- Stormy AI (статьи 2026) — Inter + typography
-- Monu Kumar (MonuMoney.in case study, dev.to) — box shadows, dark mode, design tokens
-- Anna Arteeva (uxplanet.org, 2026-02-22) — shadcn кастомизация
+12 признаков выше — повторяющиеся паттерны generic «AI-look», которые независимо подмечают разные практики vibe-coding 2026 года. Каждый guard-rail в третьей колонке устраняет один конкретный признак.

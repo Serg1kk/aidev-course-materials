@@ -73,8 +73,5 @@ Don't touch anything else.
 
 ## Источники
 
-- docs.lovable.dev — правила 1, 8
-- lovable-prompts.com — правила 2, 4, 6
-- idlen.io/blog (2026-02-18) — правила 3, 5, 7
-- Monu Kumar (MonuMoney.in, dev.to) — правило 10, design tokens
-- NotebookLM findings — правила 9, 10 (a11y + context rot)
+- [docs.lovable.dev](https://docs.lovable.dev) — Plan Mode, AGENT.md
+- [lovable-prompts.com](https://lovable-prompts.com) — каталог промптов

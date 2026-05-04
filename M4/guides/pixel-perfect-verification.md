@@ -8,9 +8,9 @@
 
 - AI не видит что получилось. Верификация — это обратная связь от рендера к коду.
 - 6 уровней: от «скриншот в чат» до «Playwright e2e без участия человека».
-- Pixel-Perfect subagent (паттерн Доронина): Browser MCP + Figma MCP + vision diff — production-grade.
+- Pixel-Perfect subagent: Browser MCP + Figma MCP + vision diff — production-grade.
 - Browser MCP экономичнее Playwright MCP: подключается к уже открытой вкладке, не жрёт контекст.
-- UI reviewer subagent (Leon van Zyl): два режима — review (аудит) и enforce (рефактор под DESIGN.md).
+- UI reviewer subagent: два режима — review (аудит) и enforce (рефактор под DESIGN.md).
 
 ---
 
@@ -45,7 +45,7 @@ inconsistent colors, broken components, missing states.
 
 Ограничения: AI видит только статичный скриншот. Не проверяет hover, focus, responsive, интерактивные состояния.
 
-### Уровень 2: Pixel-Perfect subagent (Константин Доронин)
+### Уровень 2: Pixel-Perfect subagent
 
 Production-grade паттерн. Subagent сравнивает рендер с эталоном и исправляет код.
 
@@ -72,8 +72,6 @@ Subagent loop:
   5. else: DONE
 ```
 
-Источник: Константин Доронин, `@kdoronin_blog`, https://t.me/kdoronin_blog/602
-
 Полный шаблон subagent — в `M4/prompts/pixel-perfect-subagent.md`.
 
 ### Уровень 3: Browser MCP — экономия токенов
@@ -89,9 +87,7 @@ Browser MCP подключается к уже открытой вкладке C
 
 Когда Browser MCP лучше: интерактивная разработка, когда нужна быстрая итерация. Когда Playwright MCP лучше: CI/CD, headless, e2e тесты без открытого браузера.
 
-Источник: Cole Medin, YouTube `gmaHRwijOXs`, 2026-03-25; Refat Ametov, `@nobilix_chat`.
-
-### Уровень 4: Responsive sweep (Cole Medin)
+### Уровень 4: Responsive sweep
 
 После функционального теста — прогон через три viewport.
 
@@ -106,9 +102,7 @@ missing mobile optimizations.
 
 Время: 1-2 минуты. Находит 80% responsive проблем автоматически. Запускать перед каждым milestone завершением.
 
-Источник: Cole Medin, «Responsive UI Testing with Browser MCP», YouTube `gmaHRwijOXs`, 2026-03-25.
-
-### Уровень 5: UI reviewer subagent (Leon van Zyl)
+### Уровень 5: UI reviewer subagent
 
 Выделенный sub-agent на Opus — только для дизайн-системы, не трогает логику.
 
@@ -139,8 +133,6 @@ missing mobile optimizations.
 
 Полный шаблон — в `M4/prompts/pixel-perfect-subagent.md`.
 
-Источник: Leon van Zyl, Free Boilerplate AI Agents, YouTube, 2025-08-18.
-
 ### Уровень 6: Замкнутый feedback loop
 
 Полностью автономный цикл без участия человека:
@@ -170,7 +162,7 @@ Playwright e2e (visual screenshot diff)
 
 ---
 
-## ИИшенка closed-loop: style-guide → Playwright iteration
+## Closed-loop: style-guide → Playwright iteration
 
 Паттерн для итеративного pixel-matching по референс-сайту:
 
@@ -190,8 +182,6 @@ Fix until they match.
 ```
 
 После первой удачной страницы — сгенерировать `style-guide.md` как single source of truth для остальных страниц.
-
-Источник: ИИшенка, YouTube `_-xJNrz9XXw`, ноябрь 2025.
 
 ---
 
@@ -222,7 +212,7 @@ Browser MCP vs Playwright:
   Browser MCP  → подключается к открытой вкладке, дешевле
   Playwright   → headless, CI/CD, изолированный
 
-UI reviewer subagent (Leon van Zyl):
+UI reviewer subagent:
   Review:  DESIGN.md → scan → report (не трогает код)
   Enforce: report → рефактор → commit
 
@@ -238,10 +228,3 @@ UI reviewer subagent (Leon van Zyl):
 - `guides/milestone-clear-pattern.md` — когда включать верификацию в milestone workflow
 - `guides/shadcn-pipeline.md` — что верифицировать после shadcn Implementation
 - `M4/prompts/pixel-perfect-subagent.md` — полный шаблон subagent для L2 и L5
-
-## Источники
-
-- Константин Доронин: Pixel-Perfect subagent pattern, t.me/kdoronin_blog/602
-- Leon van Zyl: Free Boilerplate AI Agents, YouTube, 2025-08-18
-- Cole Medin: Browser MCP + Responsive sweep, YouTube `gmaHRwijOXs`, 2026-03-25
-- ИИшенка: Playwright MCP screenshot iteration, YouTube `_-xJNrz9XXw`, 2025-11

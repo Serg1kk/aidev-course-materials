@@ -140,8 +140,4 @@ Suggest ONE non-obvious layout choice that fits the user journey.
 
 ## Источники
 
-- Refat Ametov (@nobilix_chat, публичный TG) — шаблон #1 (reverse-design)
-- Almas (X/Twitter) — шаблон #2 (guard-rails, магическая фраза)
-- docs.lovable.dev + lovable-prompts.com — шаблон #3
-- Monu Kumar (MonuMoney.in, dev.to) — шаблон #4
-- Almas + Refat Ametov — шаблон #5 (ASCII wireframe)
+- [docs.lovable.dev](https://docs.lovable.dev) + [lovable-prompts.com](https://lovable-prompts.com) — Plan Mode и каталог промптов
