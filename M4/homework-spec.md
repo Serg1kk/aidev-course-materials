@@ -1,365 +1,178 @@
 # Модуль 4 — Домашнее задание
 
-> **Тема:** Прототипирование инструментов — визуальная оболочка для сквозного проекта.
-> **Сложность:** Middle+ (browser-builder путь) / Senior+ (CC + agents путь)
-> **Время:** ~4–6 часов обязательного (Часть 1: ~30 мин, Часть 2: ~1.5–3 ч, Часть 3: ~1–2 ч, Часть 4: ~30 мин) + опциональные расширения.
+> **Тема:** Дизайн-система и редизайн UI с AI.
+> **Сложность:** Middle+ (browser-builder путь) / Senior+ (CC + agents путь).
+> **Время:** ~4–8 часов (по бюджету токенов и количеству страниц).
 > **Дедлайн:** объявляется отдельно перед стартом M5.
-> **Куда сдавать:** PR в ваш GitHub-репо + ссылка в LMS или чат курса.
+> **Куда сдавать:** PR в ваш форк `proshop_mern` + ссылка в LMS / чат курса.
 
 ---
 
-## Цель домашки
+## Цель
 
-Взять `proshop_mern` из M3 и добавить визуальный слой: Dashboard для управления feature flags и редизайн одной страницы. Зафиксировать визуальный язык проекта в `DESIGN.md`.
+Применить единую дизайн-систему ко фронтенду `proshop_mern`. Сделать:
 
-Инструменты — ваш свободный выбор. Критерий — работающий результат, а не конкретный инструмент. Хотите сравнить несколько — это приветствуется.
+1. **Feature Dashboard в админке** — обязательно. Полный редизайн + интерактив (toggle, slider, поиск, фильтр, states).
+2. **Редизайн остальных страниц** — сколько успеете / сколько хватит токенов. Минимум 1, идеал — все 16.
+3. **`DESIGN.md` в корне репо** — единый источник правды о визуальном языке проекта.
 
-После M4 у вас будет:
-- Рабочий Dashboard с mock-данными из `features.json`
-- Хотя бы одна редизайненная страница proshop_mern
-- `DESIGN.md` в репо — единый источник правды о визуальном языке проекта
-- База для M5 (Dashboard оживёт через webhook → n8n-агент)
+Инструменты — ваш свободный выбор (Cursor / Claude Code / Bolt / v0 / Lovable / Pencil / Figma MCP / любая комбинация). Критерий — работающий результат.
 
 ---
 
-## Выбор инструментов
+## Что сделать
 
-Используйте любой инструмент или комбинацию:
+### 1. Feature Dashboard в admin (обязательно)
 
-| Категория | Примеры |
-|-----------|---------|
-| **Browser-builders** | Lovable, Bolt.new, v0.dev |
-| **Pre-code design platforms** | Pencil Dev, Google Stitch |
-| **Embedded в чате** | Claude Artifacts, Google AI Studio |
-| **CC + агенты** | Claude Code + agents из `M4/agents/` + shadcn MCP |
-| **Figma-based** | Figma MCP → CC (если есть доступ) |
+Страница для управления feature flags из `features.json` (M3). Должна жить **в admin-секции**: роут `/admin/featuredashboard`, проверка `userInfo.isAdmin`, ссылка из admin-dropdown в Header (НЕ в общем nav). Если у вас после M3 она в общем nav — первый шаг M4 это перенести в admin.
 
-Можно начать с browser-builder для скетча, а потом перенести в CC для доработки — это стандартный workflow.
-
----
-
-## Часть 1 — Анализ существующего фронта proshop_mern (~30 мин)
-
-### Зачем
-
-Прежде чем генерировать UI — нужно понять что уже есть. Это не формальность: AI генерирует качественнее, если вы заранее знаете стек и существующие компоненты.
-
-### Что сделать
-
-Изучите фронтенд `proshop_mern` и подготовьте `homework/M4/analysis.md`:
-
-**Страницы (перечислите все, что нашли):**
-- Поиск / выдача результатов
-- Страница продукта (product details)
-- Корзина (cart)
-- Оформление заказа (checkout)
-- Личный кабинет (account)
-- Административная панель (admin)
-- ... и все остальные
-
-**Стек фронта:**
-- Версия React / роутер (React Router? TanStack?)
-- State management (Redux? Context API? Zustand?)
-- CSS-подход (CSS Modules? Tailwind? Bootstrap? Styled components?)
-- Есть ли уже shadcn/ui, MUI, Chakra или другая компонентная библиотека?
-
-**Компоненты:**
-- Какие UI-компоненты уже существуют в проекте?
-- Что из них можно переиспользовать при редизайне?
-- Что выглядит устаревшим и требует замены?
-
-**Скриншоты:** приложите 2–3 скриншота текущего интерфейса (home, product page, cart — на выбор).
-
-### Что сдать
-
-Файл `homework/M4/analysis.md` — структурированно, 1–2 страницы. Скриншоты рядом в `homework/M4/screenshots/before/`.
-
----
-
-## Часть 2 — Dashboard для feature flags (~1.5–3 часа)
-
-### Контекст
-
-Это визуальная оболочка для MCP-сервера из M3. Dashboard читает `features.json` и позволяет визуально управлять фича-флагами. Реальное подключение к MCP — это M5. Сейчас: mock-данные из `features.json`, интерактивный UI.
-
-### Функциональные требования
-
-**Список фич — обязательно:**
-- Таблица или карточки с фичами из `features.json`
-- Для каждой фичи: название, статус-бейдж, процент трафика
-
-**Статус-бейджи — три цвета:**
-- `Enabled` — зелёный
-- `Testing` — синий
-- `Disabled` — серый
-
-**Toggle для `set_feature_state`:**
-- Переключатель включения/выключения фичи
-- При клике меняет цвет бейджа (state в компоненте, без API-вызова)
-
-**Slider для `adjust_traffic_rollout`:**
-- Диапазон 0–100%
-- При перетаскивании обновляет отображаемый процент
-
-**Поиск и фильтр:**
+**Функционал:**
+- Список фич — таблица или карточки с `name`, `status`, `traffic_percentage`, `last_modified`
+- Статус-бейджи трёх цветов: Enabled зелёный / Testing синий / Disabled серый
+- Toggle (включить / выключить фичу) — меняет цвет бейджа на UI-уровне
+- Slider 0–100% для traffic_percentage — обновляет отображаемый процент
 - Поиск по имени фичи
 - Фильтр по статусу (Enabled / Testing / Disabled / All)
 
-**Edge cases — обязательно:**
-- Loading skeleton (пока данные загружаются)
-- Empty state (если фичи не найдены по фильтру)
-- Error state (если `features.json` не загрузился)
+**Состояния (mandatory):**
+- Loading skeleton
+- Empty state (если фильтр ничего не нашёл)
+- Error state (если данные не загрузились)
 
 **Accessibility:**
 - ARIA labels на интерактивных элементах
 - Keyboard navigation (Tab, Enter, Space)
 
-### Дизайн-стиль
+### 2. Редизайн остальных страниц
 
-Используйте ваш `DESIGN.md` из Части 4 (или создайте его сначала). Если хотите ориентир — чистый минималистичный стиль, тёмный сайдбар + светлая основная область. Без cringe-градиентов, без heavy borders.
+Применить `DESIGN.md` к страницам `proshop_mern`. **Сколько страниц — не принципиально**: кто сколько успеет, у кого сколько токенов хватит. Минимум — 1 страница (помимо Feature Dashboard). Идеал — все 16.
 
-Явные запреты при использовании browser-builders (включите в промпт):
-```
-No gradients, no heavy borders on cards. Clean minimal style.
-Font: Geist or Manrope (NOT Inter). Spacing: 8px grid only.
-Use CSS variables, not hardcoded colors.
-Include ARIA labels and keyboard navigation.
-Include loading skeleton, empty state, error state.
-```
+В отчёте обязательно укажите **список страниц, которые отредизайнили** (отметьте галочками в таблице ниже). Скриншоты не нужны — мы посмотрим в git diff.
 
-### Компоненты — обоснование выбора
+### 3. DESIGN.md в корне репо
 
-Перед кодированием решите: готовые компоненты или кастом?
+Файл `DESIGN.md` (или `DESIGN_SYSTEM.md`) — на выбор студента. В корне репо рядом с `CLAUDE.md` / `AGENTS.md`.
 
-| Сценарий | Рекомендация |
-|----------|-------------|
-| React-стек, задача внутренняя | shadcn/ui — быстро, accessible из коробки |
-| Angular-стек | Angular Material или PrimeNG |
-| Vue-стек | Radix Vue или PrimeVue |
-| Нет опыта с компонентными библиотеками | Начните с browser-builder, он выберет сам |
+**Минимум 7 секций:**
+- Color palette (semantic tokens, CSS variables)
+- Typography (шрифт — НЕ Inter, или явное обоснование)
+- Spacing scale (только кратные 8)
+- Border radius scale
+- Elevation / shadow approach
+- Component patterns (cards, buttons, inputs, badges)
+- Interactive states (hover, focus, loading, empty, error — для каждого элемента)
 
-Если используете shadcn/ui — агент `shadcn-component-researcher` из `M4/agents/` поможет подобрать нужные компоненты (`Table`, `Badge`, `Slider`, `Switch`, `Input`, `Select`).
+**Шаблон:** `templates/DESIGN_SYSTEM.md`. Готовый пример: `design-system-pack-example/`.
 
-Зафиксируйте решение: что взяли готовым и почему, что написали кастомно и почему готовое не подошло.
+**Anti-AI-slop guards:** дополнительная секция в `DESIGN.md` с правилами, которые не закрываются стандартными секциями (gradients, 2-col comparison, generic shadcn, UX-first). Готовый блок — в `anti-slop-supplement.md` в этой папке. Скопируйте оттуда.
 
-### Что сдать
+### 4. Внедрить DESIGN.md в rules-файл вашей IDE
 
-- Скриншот работающего Dashboard (обязательно)
-- Скриншот файлового дерева (структура компонентов)
-- Секция `## Component decisions` в README (10–20 строк)
+Чтобы AI читал `DESIGN.md` при каждой генерации UI:
 
----
-
-## Часть 3 — Редизайн одной страницы proshop_mern (~1–2 часа)
-
-### Что сделать
-
-Выберите любую одну страницу и отредизайните её, применив `DESIGN.md`:
-
-- Страница поиска / выдача результатов
-- Страница продукта (product details)
-- Корзина (cart)
-- Оформление заказа (checkout)
-- Административная панель (любой раздел)
-
-Применить `DESIGN.md` означает: цвета из палитры, типографика по scale, отступы только кратные 8, компоненты по зафиксированным паттернам.
-
-### Подходы к редизайну
-
-**Вариант A: browser-builder.**
-Сделайте скриншот существующей страницы → дайте промпт в Lovable/Bolt/v0: "Redesign this page following the attached DESIGN.md. Keep all functionality, improve visual language." Приложите DESIGN.md и скриншот.
-
-**Вариант B: CC + агенты.**
-Запустите `ux-designer` из `M4/agents/` для анализа сценария страницы → `shadcn-requirements-analyzer` для маппинга на компоненты → `shadcn-implementation-builder` для генерации кода.
-
-**Вариант C: Figma / Pencil / Stitch → CC.**
-Набросайте дизайн в визуальном редакторе → перенесите в CC через MCP.
-
-### Обоснование выбора компонентов
-
-Та же механика, что в Части 2: коротко зафиксируйте что взяли готовым, что написали кастомно, почему.
-
-### Что сдать
-
-- Скриншот "до" (существующая страница)
-- Скриншот "после" (редизайн)
-- Пара предложений в README: что изменилось и почему именно так
+| IDE | Куда добавить ссылку |
+|---|---|
+| Claude Code | `CLAUDE.md`: `## Design rules: see ./DESIGN.md` |
+| Codex CLI | `AGENTS.md`: `## Design rules: see ./DESIGN.md` |
+| Cursor | `.cursor/rules/design.mdc` (front-matter `applyTo: "**/*"`) |
+| Copilot | `.github/copilot-instructions.md`: ссылка на `./DESIGN.md` |
+| Windsurf | `.windsurfrules`: ссылка на `./DESIGN.md` |
 
 ---
 
-## Часть 4 — DESIGN.md в корне репо (~30 мин)
+## Список страниц `proshop_mern`
 
-### Почему это обязательно
+Полный инвентарь — для редизайна и для подтверждения в отчёте (отметьте галочками что сделали):
 
-Без `DESIGN.md` AI-инструменты генерируют default: Inter, фиолетовые градиенты, толстые рамки — узнаваемый "AI-look". С `DESIGN.md` вы получаете конкретный визуальный язык, который агент применяет при каждой генерации.
+| # | Page | Route | File | Видимость | Сделал? |
+|---|------|-------|------|-----------|---------|
+| 1 | Home / Search results | `/`, `/search/:keyword`, `/page/:n` | `HomeScreen.js` | public | [ ] |
+| 2 | Product details | `/product/:id` | `ProductScreen.js` | public | [ ] |
+| 3 | Cart | `/cart/:id?` | `CartScreen.js` | public | [ ] |
+| 4 | Login | `/login` | `LoginScreen.js` | public | [ ] |
+| 5 | Register | `/register` | `RegisterScreen.js` | public | [ ] |
+| 6 | Profile | `/profile` | `ProfileScreen.js` | auth | [ ] |
+| 7 | Shipping | `/shipping` | `ShippingScreen.js` | auth | [ ] |
+| 8 | Payment | `/payment` | `PaymentScreen.js` | auth | [ ] |
+| 9 | Place Order | `/placeorder` | `PlaceOrderScreen.js` | auth | [ ] |
+| 10 | Order details | `/order/:id` | `OrderScreen.js` | auth | [ ] |
+| 11 | Admin: Users list | `/admin/userlist` | `UserListScreen.js` | admin | [ ] |
+| 12 | Admin: User edit | `/admin/user/:id/edit` | `UserEditScreen.js` | admin | [ ] |
+| 13 | Admin: Products list | `/admin/productlist` | `ProductListScreen.js` | admin | [ ] |
+| 14 | Admin: Product edit | `/admin/product/:id/edit` | `ProductEditScreen.js` | admin | [ ] |
+| 15 | Admin: Orders list | `/admin/orderlist` | `OrderListScreen.js` | admin | [ ] |
+| 16 | **Admin: Feature Dashboard** | `/admin/featuredashboard` | `FeatureDashboardScreen.js` | admin | [x] **обязательно** |
 
-Это M2-паттерн "Kung Fu Context, тип Writing" — только для дизайна. `CLAUDE.md` определяет поведение агента, `DESIGN.md` определяет визуальный язык.
-
-### Минимальная структура
-
-```markdown
-# DESIGN_SYSTEM.md — proshop_mern
-
-## Color palette
-- Primary: #...
-- Accent: #...
-- Surface: #...
-- Text primary: #... / Text muted: #...
-- Status: Enabled #22c55e / Testing #3b82f6 / Disabled #6b7280
-(добавьте semantic roles: bg, fg, primary, muted, accent, destructive, border)
-
-## Typography
-- Font: [НЕ Inter — объясните выбор]
-- Scale: H1 ..., H2 ..., body 16px, line-height 1.5
-- Tracking: ...
-
-## Spacing
-- Только кратные 8: 8 / 16 / 24 / 32 / 48 / 64
-
-## Border radius
-- Карточки: ...px / Кнопки: ...px / Бейджи: ...px
-
-## Elevation
-- Подход к тени / глубине (box-shadow или через контраст фонов?)
-
-## Component patterns
-- Cards: padding, border, radius, hover
-- Buttons: radius, hover state, no heavy shadows
-- Badges: compact, status-color
-
-## Interactive states
-- Hover, focus, loading, empty — для каждого интерактивного элемента
-
-## Format
-- [shadcn/ui + Tailwind CSS 4 + CSS variables? Angular Material? кастом?]
-```
-
-### Как получить DESIGN.md если нет дизайнера
-
-**Вариант A — Reverse-design (рекомендуется):**
-Откройте скриншот Stripe, Linear или Vercel. Дайте CC промпт из `prompts/reverse-design.md`. CC проанализирует палитру, типографику, отступы и создаст `DESIGN_SYSTEM.md`.
-
-**Вариант B — TweakCN:**
-Если используете shadcn — откройте tweakCN.com, выберите пресет близкий к вашему бренду, подкрутите токены, экспортируйте → вставьте в `DESIGN.md`.
-
-**Вариант C — Вручную:**
-Заполните шаблон из `templates/DESIGN.md.template` под свой вкус.
-
-### Требования
-
-- Минимум 7 секций (color / typography / spacing / radius / elevation / components / states)
-- Шрифт — не Inter (или явное обоснование почему Inter)
-- Spacing scale — только числа кратные 8
-- Файл лежит в **корне репо** рядом с `CLAUDE.md`
-- В `CLAUDE.md` добавьте строку: `## Design rules: see ./DESIGN.md`
-
-### Что сдать
-
-Файл `DESIGN.md` (или `DESIGN_SYSTEM.md`) в корне репо. Скриншот с деревом файлов — чтобы было видно что он там лежит рядом с `CLAUDE.md`.
-
----
-
-## Q&A блок (обязательно, минимум 4–5 ответов)
-
-Ответьте письменно на те вопросы, которые были для вас актуальны. Не нужно отвечать на все — выберите те, что зашли. Сдать в `homework/M4/qa-reflection.md` или в README.
-
-1. Какие инструменты пробовали на этой домашке? (можно несколько — это ОК и приветствуется)
-2. На каком инструменте остановились и почему?
-3. Что понравилось / не понравилось в выбранном инструменте?
-4. Если пробовали несколько — чей результат лучше и почему?
-5. Что хотели попробовать, но не успели или не смогли?
-6. Сколько итераций / промптов потребовалось для Dashboard?
-7. Какие баги или pain points встретили? Как решили (или не решили)?
-8. Что изменилось в DESIGN.md после первой итерации с агентом?
-9. Для QA-профиля: планируете ли писать Playwright тест для Dashboard в M5?
-
----
-
-## Опциональные расширения (senior+)
-
-### A — UI reviewer subagent
-
-Добавить в репо `.claude/agents/ui-reviewer.md` — sub-agent на Opus, два режима:
-- **review mode**: read-only аудит кода против `DESIGN.md` (находит отступления)
-- **enforce mode**: рефактор под design system
-
-Запускать после major изменений. Это production-grade паттерн: LLM дрейфуют от правил DESIGN.md после крупных правок — агент возвращает их на место.
-
-### B — Pixel-Perfect verify
-
-Playwright → скриншот рендера Dashboard → vision-модель diff против референса. Если diff выше порога — агент переписывает код. Верификация уровня F5 (Verify фаза pipeline).
-
-Особенно релевантно если вы QA-профиль: это и есть производственный паттерн закрытого цикла.
-
-### C — Selection-mode UI (design system как данные)
-
-Реализовать паттерн из модуля: `DESIGN.md` + `design-system/tokens.json` + `design-system/globals.css`. Редактирование только выбранных секций дизайн-системы без регенерации всего файла (экономия токенов × 10).
-
-Детали: `M4/guides/design-system-versioning.md` (появится).
-
-### D — Скринкаст сравнения
-
-Если пробовали несколько инструментов — короткий GIF или screencast (1–2 мин): Dashboard side-by-side в двух инструментах. Покажите группе на M5 check-in.
-
----
-
-## Что НЕ требуется
-
-Явный список — чтобы не тратить время на лишнее:
-
-- **Нет Vercel deploy** — всё локально, у вас Docker setup (backend + БД + n8n из M3). Vercel — отдельная тема позже.
-- **Нет реального подключения к MCP** из M3 — Dashboard работает на mock-данных из `features.json`. Реальный webhook → n8n-агент → MCP — это M5.
-- **Нет переписывания всего proshop_mern** — редизайн одной страницы, не всего проекта.
-- **Нет production-grade тестов** — тестирование (Playwright e2e, unit) разбирается в M6. Сейчас — только UI.
-- **Нет бэкенд-изменений** — работаем только с фронтом. MCP-сервер из M3 не трогаем.
+Приоритеты при дефиците бюджета: high-traffic public (Home, Product, Cart, Checkout) → auth (Login, Register, Profile) → admin.
 
 ---
 
 ## Формат сдачи
 
-Структура папки в репо:
-
 ```
-homework/M4/
-├── analysis.md              ← Часть 1: анализ существующего фронта
-├── qa-reflection.md         ← Q&A блок (или встроить в README)
-├── README.md                ← краткое описание что сделали + Component decisions
-├── screenshots/
-│   ├── before/              ← скриншоты исходного UI (2–3 штуки)
-│   ├── dashboard/           ← Dashboard (обязательно)
-│   ├── redesign/            ← страница "до" и "после"
-│   └── file-tree.png        ← дерево файлов проекта
-└── [опционально]
-    └── screencast.gif       ← GIF с Dashboard в действии (тоглы, слайдер, поиск)
-
-DESIGN.md                    ← в корне репо (не в homework/)
+proshop_mern/
+├── DESIGN.md                   ← в корне репо рядом с CLAUDE.md / AGENTS.md
+├── CLAUDE.md (или AGENTS.md / .cursor/rules/design.mdc) — со ссылкой на DESIGN.md
+├── frontend/src/screens/
+│   ├── FeatureDashboardScreen.js   ← редизайн (обязательно)
+│   ├── HomeScreen.js               ← если редизайнили
+│   └── ...                          ← остальные
+└── homework/M4/
+    └── README.md               ← краткий отчёт
 ```
 
-Скриншоты — обязательно не битые ссылки. Если загружаете в GitHub — через Issues (drag-and-drop) или в папку репо.
+Скриншоты не нужны — будем проверять через git (diff + локальный запуск).
+
+В `README.md` отчёта обязательно:
+- Список редизайненных страниц (галочками по таблице ниже)
+- Какой инструмент(ы) использовали
+- Component decisions (что взяли готовым, что кастомно)
 
 ---
 
-## Критерии приёма (бинарно)
+## Чеклист (бинарно — пройдитесь ПЕРЕД PR)
 
-- [ ] `homework/M4/analysis.md` создан и заполнен (стек + страницы + компоненты + скриншоты)
-- [ ] Dashboard отображает фичи из `features.json`, toggle и slider работают (UI-уровень)
-- [ ] Редизайн хотя бы одной страницы proshop_mern: скриншот "до" + "после"
-- [ ] `DESIGN.md` в корне репо, минимум 7 секций, `CLAUDE.md` ссылается на него
-- [ ] Q&A блок: минимум 4–5 ответов на актуальные вопросы
+### Feature Dashboard (обязательно)
 
----
+- [ ] Страница в admin: роут `/admin/featuredashboard`, проверка `isAdmin`, ссылка в admin-dropdown в Header (НЕ в общем nav)
+- [ ] Список фич из `features.json` отображается
+- [ ] Статус-бейджи трёх цветов: Enabled / Testing / Disabled
+- [ ] Toggle меняет цвет бейджа при клике
+- [ ] Slider 0–100 обновляет процент traffic_percentage
+- [ ] Поиск по имени фичи работает
+- [ ] Фильтр по статусу работает
+- [ ] Loading skeleton, Empty state, Error state — присутствуют
+- [ ] ARIA labels + Keyboard navigation
 
-## Связь с курсом
+### Редизайн остальных страниц
 
-```
-M3 (RAG + MCP)
-  └── features.json → Dashboard (M4)
-                       DESIGN.md (M4) → сохраняется на M5, M6
-                       Dashboard → Webhook → n8n-агент (M5)
-                                             Агент-аудитор кода (M6)
-```
+- [ ] Минимум 1 страница (помимо Feature Dashboard) редизайнена
+- [ ] В README указан список редизайненных страниц (по таблице выше)
 
-Чем тщательнее сделаете `DESIGN.md` в M4 — тем меньше итераций потратите в M5 и M6, когда агенты будут генерировать новые компоненты поверх этого же кода.
+### DESIGN.md
+
+- [ ] `DESIGN.md` в корне репо рядом с `CLAUDE.md` / `AGENTS.md`
+- [ ] Минимум 7 секций (color / typography / spacing / radius / elevation / components / states)
+- [ ] Шрифт — не Inter (или явное обоснование почему Inter)
+- [ ] Spacing scale — только числа кратные 8
+- [ ] Anti-AI-slop guards секция добавлена (из `anti-slop-supplement.md`)
+- [ ] В rules-файле IDE добавлена ссылка `## Design rules: see ./DESIGN.md`
+
+### Anti-AI-slop визуальный аудит
+
+- [ ] Нет cringe-градиентов (фиолетовые / радужные)
+- [ ] Нет 2-column comparison blocks
+- [ ] Нет heavy borders на карточках
+- [ ] Hover state есть на кнопках
+- [ ] Focus state виден при keyboard navigation
+- [ ] Loading state — skeleton, не просто спиннер
+- [ ] Все отступы кратны 8
+- [ ] shadcn (если используете) — кастомизирован, не дефолтный slate/zinc
+
+### Финал
+
+- [ ] PR создан
+- [ ] Ссылка отправлена в LMS / чат курса
 
 ---
 
@@ -367,13 +180,13 @@ M3 (RAG + MCP)
 
 | Что | Где |
 |-----|-----|
-| Агенты UX / shadcn / a11y | `M4/agents/` |
-| Шаблон DESIGN.md | `M4/templates/DESIGN.md.template` |
-| Промпт reverse-design | `M4/prompts/reverse-design.md` |
+| Шаблон DESIGN.md | `templates/DESIGN_SYSTEM.md` |
+| Готовый пример пакета | `design-system-pack-example/` |
+| Anti-AI-slop supplement | `anti-slop-supplement.md` |
+| 12 признаков AI-look | `cheatsheets/12-signs-of-ai-look.md` |
+| Промпт reverse-design | `prompts/reverse-design.md` |
 | Данные: features.json | `M3/project-data/features.json` |
-| Спека фич и валидация | `M3/project-data/feature-flags-spec.md` |
-| Anti-AI-slop шпаргалка | `M4/cheatsheets/anti-ai-slop.md` |
-| shadcn/ui MCP server | https://github.com/modelcontextprotocol/servers (shadcn/ui) |
+| Агенты UX / shadcn / a11y | `agents/` |
 | TweakCN (визуальный редактор shadcn-тем) | https://tweakcn.com |
 
 ---
