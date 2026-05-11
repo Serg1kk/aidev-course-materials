@@ -12,20 +12,13 @@
 
 | Файл / папка | Зачем |
 |---|---|
-| `homework-spec.md` | Полное ТЗ домашки (2 workflow + тест на галлюцинации) |
-| `guides/best-practices.md` | Production-правила: нода > HTTP > MCP, Algorithm-before-AI, Tool Isolation, Memory выбор, лимит итераций |
-| `guides/algorithm-before-ai.md` | 4 слоя детерминированных guards до и после LLM |
-| `guides/memory-types-in-n8n.md` | Window Buffer / Postgres Chat / Conversation Buffer / Vector Store — что когда |
-| `guides/dashboard-changes.md` | Как расширить Feature Dashboard из M4 (sample React snippets, env переменные) |
-| `guides/troubleshooting.md` | Типовые ошибки + решения (n8n MCP, webhook 404, Replicate rate limits, Telegram setup) |
-| `prompts/gcao-templates.md` | 3 готовых GCAO-шаблона system prompt для AI Agent ноды |
-| `agents/README.md` | Как использовать 2 CC-агента совместно (orchestrator → spec → workflow-builder → JSON) |
-| `agents/n8n-requirements-orchestrator.md` | CC-агент: user story → детальный workflow spec |
-| `agents/n8n-workflow-builder.md` | CC-агент: спек → валидный n8n JSON |
-| `sample-workflows/README.md` | Как импортировать стартовые JSON в n8n + где placeholders для credentials |
-| `sample-workflows/wf1-manual-trigger-template.json` | Стартовый шаблон для WF1 (manual webhook) |
-| `sample-workflows/wf2-scheduled-monitor-template.json` | Стартовый шаблон для WF2 (scheduled cron) |
-| `sample-workflows/simulate_traffic.py` | Эталонный скрипт имитации трафика для WF2 |
+| `homework-spec.md` | **Главный файл — всё ТЗ домашки в одном месте**: 2 workflow с ASCII-схемами, frontend snippet, X-API-Key auth, 2 Python-симулятора с синусоидой, GCAO-промпты, 3 промпта для CC-агентов, тест на галлюцинации + 5 appendices (best-practices, algorithm-before-AI, memory types, troubleshooting, defensive-guard HITL template). ~1950 строк. |
+| `agents/README.md` | Как использовать 2 CC-скилла совместно: orchestrator → spec → workflow-builder → JSON |
+| `agents/n8n-requirements-orchestrator.md` | CC-скилл: user story → детальный workflow spec |
+| `agents/n8n-workflow-builder.md` | CC-скилл: спек → валидный n8n JSON |
+| `guides/browser-use-prompt-injection-defenses.md` | Отдельный security-reference: как защищают от prompt injection в browser-агентах (теория, не про домашку, читать опционально) |
+| `guides/crewai-vs-n8n.md` | Сравнение CrewAI и n8n: когда что выбирать, гибридный паттерн |
+| `n8n Workflows/` | External community templates для самостоятельного изучения (awesome-n8n-templates, n8n-workflows). Не относится к сдаче — reference. |
 
 ## Pre-read до занятия
 
