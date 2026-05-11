@@ -1,0 +1,115 @@
+﻿How to Connect Google APIs to n8n
+This guide will help you configure your Google Cloud Console (GCP) and integrate services such as Google Drive, Gmail, Google Docs, Sheets, Slides, and Calendar with n8n.
+________________
+
+
+Step 1: Visit GCP
+Visit the Google Cloud Console (GCP) at:
+ https://console.cloud.google.com/
+Select the right gmail account
+________________
+
+
+Step 2: Payment Settings and Verification
+1. You will need to input your card details.
+2. You must use a physical Mastercard or Visa card, without any local restrictions.
+3. Otherwise, Google will not accept the card, and you won't be able to proceed with the setup.
+
+Note:
+   1. You will not be charged.
+   2. If it's your first time, you'll receive $300 Google Cloud credits (valid for 3 months).
+
+________________
+
+
+Step 3: Create a Project
+      1. You will have a default project called “My First Project” or “No Organization”.
+      2. You can create a new project and give it a preferred name.
+      1. For example: “n8n connection”
+      1. In the top-left corner, click on “My First Project”
+      2. Switch to the new project you just created.
+
+
+Step 4: Enable APIs
+We’re going to enable all APIs, following a 3 step process:
+      1. In GCP, at the top, search for for Google Drive API
+      2. Click the Google Drive API result
+      3. Then click Enable
+      4. Repeat steps 1-3 above for for:
+      1. Gmail API
+      2. Google Docs API
+      3. Google Sheets API
+      4. Google Calendar API
+      5. Google Slides API
+
+
+Step 5: OAUth Consent Screen
+      1. Hit the hamburger helper in the top left corner
+      2. Click “APIs & Services”.
+      3. Click on OAuth Consent Screen in the left sidebar, 
+      4. Then click Get Started.
+
+OAuth Configuration:
+         1. App name: n8n
+         2. User support email: Your email (i.e. john@gmail.com)
+         3. Audience: External
+         4. Contact information: Your email (i.e. john@gmail.com)
+         5. Click Continue & Create
+After OAuth Configuration:
+         1. Hit the hamburger helper in the top left corner
+         2. Click “APIs & Services”.
+         3. Click “OAuth Consent Screen”.
+         4. Click on Audience on the side bar 
+         5. Click on + Add Users under Test Users 
+         6. Add your email
+         7. Click Publish App 
+
+OAuth Client Settings:
+            1. Hit the hamburger helper in the top left corner
+            2. Click “APIs & Services”.
+            3. Click “OAuth Consent Screen”.
+            4. Click on Create OAuth Client
+            5. Application Type: Web Application
+            6. Name: n8n
+            7. Authorized redirect URI:
+            1. Note: this is not the Authorized JavaScript origins + Add URI
+            2. For cloud version, you’ll need to find your URI:
+            1. Find this inside n8n, by creating a workflow, selecting a Google Drive node > adding any actions (such as “copy file”) > Credential to connect with > Create new credential > OAuth Redirect URL
+            2. i.e. https://oauth.n8n.cloud/oauth2/callback
+            3. For self-hosted version, you’ll need to find your URI:
+            1. Find this inside n8n, by creating a workflow, selecting a Google Drive node > adding any actions (such as “copy file”) > Credential to connect with > Create new credential > OAuth Redirect URL
+            2. i.e. https://n8n.srv43242.hstgr.cloud/rest/oauth2-credential/callback 
+            4. Paste this “OAuth Redirect URL” from n8n into “Authorized redirect URIs” in Google Cloud console
+            8. Click Create in Google cloud console
+________________
+
+
+Step 6: Authenticating Apps
+            5. Hit the hamburger helper in the top left corner
+            6. Click “APIs & Services”.
+            7. Click Credentials
+            8. Click the Pencil icon (edit)
+            9. Keep this page open so that you can easily reference the: 
+            1. client ID (looks like: 32434-ov1r7gk9vli84lkj9mg3e234lkjf3t.apps.googleusercontent.com)
+            2. client secret (looks like: GOIUD-aq-c52K9mgdfu4-7cLTpZ4kljakr8)
+            10. Copy the client ID and client secret
+Return back to n8n.
+            1. Inside n8n, create a workflow (or open an existing one), selecting a Google Drive node > adding any action (such as “copy file”) > Credential to connect with 
+            2. Add in your Client ID from Google Cloud Console
+            1. i.e. 32434-ov1r7gk9vli84lkj9mg3e234lkjf3t.apps.googleusercontent.com
+            3. Add in your client secret from Google Cloud Console
+            1. i.e. GOIUD-aq-c52K9mgdfu4-7cLTpZ4kljakr8
+            4. Authorization URL:
+            1. If it asks for this, add in: https://accounts.google.com/o/oauth2/v2/auth
+            5. Access Token URL:
+            1. If it asks for this, add in: https://oauth2.googleapis.com/token 
+            6. Click Sign In With Google
+            7. Choose your account with the same email as the test user
+            8. Click continue
+            9. Tick all permissions and confirm
+            10. Repeat steps 1-7 above for for:
+            1. Gmail API
+            2. Google Docs API
+            3. Google Sheets API
+            4. Google Calendar API
+            5. Google Slides API

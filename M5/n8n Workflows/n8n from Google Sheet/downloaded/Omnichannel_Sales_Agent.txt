@@ -1,0 +1,68 @@
+﻿________________
+
+
+Setting up a RAG AI Agent with Supabase (Postgres Memory)
+This guide will walk you through setting up the chat memory component of the RAG AI agent using a Postgres database hosted on Supabase.
+1. Add the Postgres Chat Memory Node in n8n
+* Open your n8n workflow editor.
+* Click the '+' button to add a new node.
+* Search for "Postgres Chat Memory" and select it.
+* This node stores the chat history for your AI agent.
+  
+
+2. Configure the Postgres Chat Memory Node (Credentials)
+* With the "Postgres Chat Memory" node selected, go to the "Parameters" tab in the node's configuration panel.
+* Click on the dropdown next to "Credential to connect with".
+* Select "Create New Credential". A new pop-up window titled "Postgres account" will appear. This is where you'll enter your database connection details.
+  
+
+3. Set up a Supabase Project
+* If you don't already have one, go to the Supabase website (https://supabase.com/) and sign up or log in.
+* Navigate to your dashboard and click "New Project".
+* Fill in the project details:
+   * Organization: Choose your organization.
+   * Project name: Give your project a descriptive name (e.g., n8n-rag-demo).
+   * Database Password: Type a strong password. IMPORTANT: Copy this password and save it somewhere safe, as you will need it later and cannot easily retrieve it.
+   * Region: Select a region closest to your intended users for best performance.
+* Click "Create new project".
+* Supabase will take a few minutes to provision your database and API endpoints. Wait for this process to complete.
+  
+
+
+
+4. Find Supabase Database Connection Details
+* Once your Supabase project is ready, go to your project's dashboard.
+* In Top menu bar, click on ‘Connect’
+  
+
+
+
+  
+
+
+
+5. Enter Connection Details into n8n Credential
+* Go back to the n8n "Postgres account" credential pop-up window that you opened in Step 2.
+* Copy the following details from the Supabase "Connection parameters" from the Transaction pooler (Step 4) and paste them into the corresponding fields in n8n:
+   * Host: Copy the value next to "Host".
+   * Database: This should default to postgres. Verify it matches.
+   * User: Copy the value next to "User".
+   * Password: Enter the Database Password you saved in Step 3.
+   * Port: Copy the value next to "Port" (usually 6543).
+* Click the "Test" button at the top right of the credential pop-up to verify the connection is successful.
+* Click the "Save" button at the top right to save the credential. You can rename the credential at the top if you wish 
+  
+
+6. Finalize Postgres Chat Memory Node Configuration
+* Return to the "Parameters" tab of the "Postgres Chat Memory" node in your n8n workflow.
+* Ensure the credential you just created is selected in the "Credential to connect with" dropdown.
+* Session ID: Leave this as "Take from previous node automatically".
+* Table Name: This should automatically populate with n8n_chat_histories. This is the default table name used by LangChain/n8n for chat history. You can leave this as is.
+* Context Window Length: This determines how many past interactions the AI model remembers. The default is 5 and you can adjust this based on your needs. Higher numbers consume more tokens but provide more context.
+* Click "Save" on your n8n workflow to save the node configuration.
+
+
+________________
+
+
+You have now successfully configured the Postgres Chat Memory node to store conversation history in your Supabase database.
