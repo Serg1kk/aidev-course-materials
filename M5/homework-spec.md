@@ -30,7 +30,7 @@
 - Анатомии production-агента: GCAO в system prompt + Structured Output на каждом шаге + Algorithm-before-AI (4 слоя guards).
 - Связке UI ↔ Agent ↔ MCP — full-stack замкнутый цикл на собственном проекте.
 - Двум production-сценариям сразу: manual (синхронный, человек инициирует) + scheduled (асинхронный, агент инициирует сам).
-- Использовать Claude Code не только для написания кода, но и для построения workflow — два специализированных скилла на этом курсе.
+- Использовать Claude Code не только для написания кода, но и для построения workflow — два специализированных субагента на этом курсе.
 - Защищать webhook (auth) и понимать почему «промт «не делай X» — не защита».
 
 ---
@@ -44,7 +44,7 @@
 | n8n инстанс | Cloud free tier (https://app.n8n.io), self-host docker, или n8n-install (https://github.com/kossakovsky/n8n-install) | Открыть `http://localhost:5678` или cloud URL → видно UI редактора |
 | Telegram-бот | Создан через @BotFather, токен сохранён в n8n credentials, chat_id найден | Webhook curl `getMe` → `{"ok": true, "result": {...}}` |
 | Python 3.10+ | Для запуска симуляторов (используется `requests`, `numpy`, `math`) | `python3 --version` → 3.10+ |
-| Claude Code | Для использования двух M5-скиллов: `n8n-requirements-orchestrator` + `n8n-workflow-builder` | `claude --list-skills \| grep n8n` → 2 матча |
+| Claude Code | Для использования двух M5-субагентов: `n8n-requirements-orchestrator` + `n8n-workflow-builder` | `ls ~/.claude/agents \| grep n8n` → 2 файла (`.md`) |
 
 ### Если у вас в M3 нет JSON Schema валидации диапазонов
 
@@ -1163,7 +1163,9 @@ curl -X POST https://your-n8n.com/webhook/feature-control \
 
 # Часть D. Как использовать Claude Code-агентов для разработки workflow
 
-> В этой папке (`agents/`) лежат два CC-скилла. Они позволяют не кликать в n8n UI часами, а описать что нужно — и получить готовый JSON.
+> В этой папке (`agents/`) лежат два **Claude Code субагента** (не скилла). Они позволяют не кликать в n8n UI часами, а описать что нужно — и получить готовый JSON.
+>
+> 🧭 **Чем агент отличается от скилла.** Скилл — это «инструкция в кармане», CC-чат активирует её через `/имя-скилла`. Субагент — это отдельный процесс Claude (отдельный контекст, отдельный системный промпт), который дочерний к основному чату. Основной чат вызывает его через Task-tool (или вы пишете «используй субагента такого-то — задача...»). Поэтому ставятся они в `~/.claude/agents/` как одиночные `.md` файлы — никаких папок `~/.claude/skills/<name>/SKILL.md`.
 
 ## D.1 Зачем эти агенты
 
@@ -1179,30 +1181,38 @@ curl -X POST https://your-n8n.com/webhook/feature-control \
 
 ## D.2 Установка
 
+Субагенты в Claude Code — это одиночные `.md` файлы в `~/.claude/agents/` (user-level, доступны во всех проектах) или `.claude/agents/` (project-level, только этот репозиторий). Никаких подпапок `<name>/SKILL.md` — просто `<name>.md`.
+
 ```bash
-# Скопируйте файлы скиллов в локальную CC папку
-mkdir -p ~/.claude/skills/n8n-workflow-builder
-mkdir -p ~/.claude/skills/n8n-requirements-orchestrator
+# Вариант A — user-level (доступны во всех проектах)
+mkdir -p ~/.claude/agents
 
 cp aidev-course-materials/M5/agents/n8n-workflow-builder.md \
-   ~/.claude/skills/n8n-workflow-builder/SKILL.md
+   ~/.claude/agents/n8n-workflow-builder.md
 
 cp aidev-course-materials/M5/agents/n8n-requirements-orchestrator.md \
-   ~/.claude/skills/n8n-requirements-orchestrator/SKILL.md
+   ~/.claude/agents/n8n-requirements-orchestrator.md
 
-# Перезапустите CC. Проверьте что skills загружены:
-claude --list-skills | grep n8n
-# Ожидаемо: 2 матча
+# Вариант B — project-level (только для текущего репозитория)
+# mkdir -p .claude/agents
+# cp aidev-course-materials/M5/agents/n8n-workflow-builder.md .claude/agents/
+# cp aidev-course-materials/M5/agents/n8n-requirements-orchestrator.md .claude/agents/
+
+# Перезапустите Claude Code. Проверьте что агенты на месте:
+ls ~/.claude/agents | grep n8n
+# Ожидаемо: 2 файла — n8n-requirements-orchestrator.md, n8n-workflow-builder.md
 ```
+
+> 💡 Внутри CC можно проверить и список загруженных субагентов командой `/agents` — должны быть видны оба.
 
 ## D.3 Промпт 1 — Brainstorm + Requirements Orchestrator
 
-**Когда использовать:** в самом начале, когда есть только идея «хочу чтобы из UI можно было откатить фичу». Этот промпт переводит CC в режим продуктового брейншторма + входит в роль orchestrator'а, который задаёт уточняющие вопросы и превращает идею в детальный spec.
+**Когда использовать:** в самом начале, когда есть только идея «хочу чтобы из UI можно было откатить фичу». Этот промпт просит CC вызвать субагента `n8n-requirements-orchestrator`, который задаёт уточняющие вопросы и превращает идею в детальный spec.
 
 Скопируйте в Claude Code:
 
 ```
-/n8n-requirements-orchestrator
+Запусти субагента n8n-requirements-orchestrator.
 
 Войди в режим брейншторма и роль "первого агента, который пишет требования
 для разработки n8n-workflow". Я расскажу user story, ты задавай уточняющие
@@ -1223,7 +1233,7 @@ User story:
 Webhook защищён header X-API-Key."]
 ```
 
-CC в роли orchestrator'а задаст уточняющие вопросы (примерно):
+Субагент в роли orchestrator'а задаст уточняющие вопросы (примерно):
 - Какой формат ответа для UI? JSON с какими полями?
 - Что делать при invalid params (например, `traffic_percentage: -50`)?
 - Какая Memory? (рекомендую Window Buffer length=5 для коротких сессий)
@@ -1236,7 +1246,7 @@ CC в роли orchestrator'а задаст уточняющие вопросы 
 ### Тот же промпт для WF2
 
 ```
-/n8n-requirements-orchestrator
+Запусти субагента n8n-requirements-orchestrator.
 
 [те же инструкции про брейншторм + орчестратор-роль]
 
@@ -1249,14 +1259,14 @@ User story:
 
 ## D.4 Промпт 2 — Workflow Builder (spec → JSON)
 
-**Когда использовать:** после того как spec из шага D.3 готов. Этот скилл превращает структурированный spec в валидный JSON workflow, готовый к импорту в n8n.
+**Когда использовать:** после того как spec из шага D.3 готов. Этот субагент превращает структурированный spec в валидный JSON workflow, готовый к импорту в n8n.
 
 > 🎁 **Готовые промпты ниже** валидированы через живой n8n 2.17.7 + `n8n-requirements-orchestrator`. Все имена нод, typeVersion и connection types — реальные с production-инстанса. Просто скопируйте и запустите в Claude Code.
 
 ### Промпт WF1 — Manual trigger (готовый к копи-пасте)
 
 ```
-/n8n-workflow-builder
+Запусти субагента n8n-workflow-builder.
 
 Сгенерируй валидный n8n workflow JSON для импорта в n8n 2.x.
 
@@ -1367,7 +1377,7 @@ Output:
 ### Промпт WF2 — Scheduled monitor (готовый к копи-пасте)
 
 ```
-/n8n-workflow-builder
+Запусти субагента n8n-workflow-builder.
 
 Сгенерируй валидный n8n workflow JSON для импорта в n8n 2.x.
 
@@ -1691,7 +1701,7 @@ python3 simulate_wf1.py --webhook-url ... --duration 120 --include-invalid
 
 ## CC-агенты
 
-- [ ] Скилы `n8n-requirements-orchestrator` и `n8n-workflow-builder` установлены (`claude --list-skills | grep n8n`)
+- [ ] Субагенты `n8n-requirements-orchestrator` и `n8n-workflow-builder` установлены в `~/.claude/agents/` (`ls ~/.claude/agents | grep n8n` → 2 файла)
 - [ ] (Опционально) пробовали Промпт 3 — deploy через n8n MCP
 
 ## Сдача

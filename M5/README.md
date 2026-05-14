@@ -12,10 +12,10 @@
 
 | Файл / папка | Зачем |
 |---|---|
-| `homework-spec.md` | **Главный файл — всё ТЗ домашки в одном месте**: 2 workflow с ASCII-схемами, frontend snippet, X-API-Key auth, 2 Python-симулятора с синусоидой, GCAO-промпты, 3 промпта для CC-агентов, тест на галлюцинации + 5 appendices (best-practices, algorithm-before-AI, memory types, troubleshooting, defensive-guard HITL template). ~1950 строк. |
-| `agents/README.md` | Как использовать 2 CC-скилла совместно: orchestrator → spec → workflow-builder → JSON |
-| `agents/n8n-requirements-orchestrator.md` | CC-скилл: user story → детальный workflow spec |
-| `agents/n8n-workflow-builder.md` | CC-скилл: спек → валидный n8n JSON |
+| `homework-spec.md` | **Главный файл — всё ТЗ домашки в одном месте**: 2 workflow с ASCII-схемами, frontend snippet, X-API-Key auth, 2 Python-симулятора с синусоидой, GCAO-промпты, 3 промпта для CC-субагентов, тест на галлюцинации + 5 appendices (best-practices, algorithm-before-AI, memory types, troubleshooting, defensive-guard HITL template). ~1950 строк. |
+| `agents/README.md` | Как использовать 2 CC-субагента совместно: orchestrator → spec → workflow-builder → JSON |
+| `agents/n8n-requirements-orchestrator.md` | CC-субагент: user story → детальный workflow spec |
+| `agents/n8n-workflow-builder.md` | CC-субагент: spec → валидный n8n JSON |
 | `guides/browser-use-prompt-injection-defenses.md` | Отдельный security-reference: как защищают от prompt injection в browser-агентах (теория, не про домашку, читать опционально) |
 | `guides/crewai-vs-n8n.md` | Сравнение CrewAI и n8n: когда что выбирать, гибридный паттерн |
 | `n8n Workflows/` | External community templates для самостоятельного изучения (awesome-n8n-templates, n8n-workflows). Не относится к сдаче — reference. |

@@ -1,6 +1,8 @@
-# Claude Code agents для разработки workflow в n8n
+# Claude Code субагенты для разработки workflow в n8n
 
-> Два специализированных Claude Code агента для построения n8n-workflow из user story. Используются совместно или по отдельности.
+> Два специализированных Claude Code субагента для построения n8n-workflow из user story. Используются совместно или по отдельности.
+>
+> ⚠️ **Это субагенты, не скиллы.** Ставятся в `~/.claude/agents/<name>.md` (одиночные `.md` файлы), а не в `~/.claude/skills/<name>/SKILL.md`. Вызываются через основной CC-чат фразой «запусти субагента такого-то — задача...», а не через slash-команду.
 
 ---
 
@@ -13,11 +15,11 @@
 4. Подключать credentials, проверять connections
 5. Валидировать схему
 
-Если шаг 1-2 делает один CC-агент, а шаг 3-5 — второй, у вас остаётся только финальный review JSON и импорт в n8n.
+Если шаг 1-2 делает один CC-субагент, а шаг 3-5 — второй, у вас остаётся только финальный review JSON и импорт в n8n.
 
 ---
 
-## Два агента
+## Два субагента
 
 ### `n8n-requirements-orchestrator.md`
 
@@ -70,26 +72,28 @@ credentials_needed: [slack, google_sheets, telegram]
 
 ## Как использовать совместно
 
+Субагенты вызываются из обычного CC-чата фразой, в которой явно назван агент. Основной Claude сам диспатчит задачу нужному субагенту через Task-tool.
+
 ### Вариант 1: Orchestrator → Builder
 
-```bash
-# 1. Запустите orchestrator с user story
-claude --skill n8n-requirements-orchestrator < story.md > spec.yaml
+```text
+# 1. В CC-чате запустите orchestrator с user story:
+> Запусти субагента n8n-requirements-orchestrator. Войди в роль и собери spec по этой user story: [...]
 
-# 2. Передайте spec в builder
-claude --skill n8n-workflow-builder < spec.yaml > workflow.json
+# 2. Когда orchestrator вернул spec.yaml — передайте его builder'у:
+> Запусти субагента n8n-workflow-builder. На вход — spec ниже, на выход — JSON workflow для n8n 2.x.
+> [paste spec.yaml]
 
-# 3. Импортируйте JSON в n8n (Import from File)
+# 3. Импортируйте JSON в n8n (Settings → Import from File)
 # 4. Настройте credentials под себя
 ```
 
 ### Вариант 2: Только Orchestrator (для сложных задач)
 
 Если задача требует много уточнений — используйте только orchestrator в интерактивном режиме:
-```bash
-claude --skill n8n-requirements-orchestrator
-> Расскажи задачу, и я задам уточняющие вопросы.
-> ...
+```text
+> Запусти субагента n8n-requirements-orchestrator. Расскажу задачу — задавай уточняющие вопросы пока не получишь полный spec.
+> [paste user story]
 ```
 
 В конце получите spec.yaml который можно скопировать в n8n руками или передать builder'у.
@@ -97,27 +101,34 @@ claude --skill n8n-requirements-orchestrator
 ### Вариант 3: Только Builder (если spec уже есть)
 
 Если у вас уже есть детальный spec (из документации, ADR, ticket в Jira):
-```bash
-claude --skill n8n-workflow-builder < existing-spec.yaml > workflow.json
+```text
+> Запусти субагента n8n-workflow-builder. На вход — spec ниже, на выход — JSON workflow для n8n 2.x.
+> [paste existing-spec.yaml]
 ```
 
 ---
 
 ## Установка
 
+Субагенты — это одиночные `.md` файлы в `~/.claude/agents/` (user-level) или `.claude/agents/` (project-level). Никаких подпапок `<name>/SKILL.md`.
+
 ```bash
-# 1. Скопируйте файлы агентов в локальную CC skills папку
-mkdir -p ~/.claude/skills/n8n-workflow-builder
-mkdir -p ~/.claude/skills/n8n-requirements-orchestrator
+# Вариант A — user-level (доступны во всех проектах)
+mkdir -p ~/.claude/agents
+cp n8n-workflow-builder.md ~/.claude/agents/n8n-workflow-builder.md
+cp n8n-requirements-orchestrator.md ~/.claude/agents/n8n-requirements-orchestrator.md
 
-cp n8n-workflow-builder.md ~/.claude/skills/n8n-workflow-builder/SKILL.md
-cp n8n-requirements-orchestrator.md ~/.claude/skills/n8n-requirements-orchestrator/SKILL.md
+# Вариант B — project-level (только этот репозиторий)
+# mkdir -p .claude/agents
+# cp n8n-workflow-builder.md .claude/agents/
+# cp n8n-requirements-orchestrator.md .claude/agents/
 
-# 2. Перезапустите CC. Skills должны автоматически появиться.
-
-# 3. Проверьте что skills загружены:
-claude --list-skills | grep n8n
+# Перезапустите Claude Code. Проверьте что агенты на месте:
+ls ~/.claude/agents | grep n8n
+# Ожидаемо: 2 файла — n8n-requirements-orchestrator.md, n8n-workflow-builder.md
 ```
+
+> 💡 Внутри CC можно посмотреть список загруженных субагентов командой `/agents`.
 
 ---
 
@@ -152,9 +163,9 @@ Builder сгенерирует JSON.
 
 ---
 
-## Антипаттерн использования агентов
+## Антипаттерн использования субагентов
 
-❌ **Не используйте оба агента подряд без review.** Builder может галлюцинировать имена нод (`AI Agent` vs `LangChain Agent` vs `Tools Agent`) — после генерации обязательно проверьте JSON в n8n UI до того как залить в production.
+❌ **Не используйте оба субагента подряд без review.** Builder может галлюцинировать имена нод (`AI Agent` vs `LangChain Agent` vs `Tools Agent`) — после генерации обязательно проверьте JSON в n8n UI до того как залить в production.
 
 ❌ **Не доверяйте orchestrator на edge cases.** Он хорошо собирает happy path, но edge cases требуют вашего внимания. Прочитайте spec перед передачей builder'у.
 
@@ -162,12 +173,12 @@ Builder сгенерирует JSON.
 
 ---
 
-## Что в файлах агентов
+## Что в файлах субагентов
 
-> Файлы `n8n-workflow-builder.md` и `n8n-requirements-orchestrator.md` будут добавлены в эту папку перед стартом домашки. Они содержат YAML-frontmatter (description, version) + полный system prompt + примеры использования + ограничения.
+> Файлы `n8n-workflow-builder.md` и `n8n-requirements-orchestrator.md` будут добавлены в эту папку перед стартом домашки. Они содержат YAML-frontmatter (`name`, `description`) + полный system prompt + примеры использования + ограничения.
 >
-> Если CC у вас уже работает с другими skills — формат знакомый.
+> Если у вас уже настроены другие CC-субагенты — формат знакомый: один `.md` файл на агента в `~/.claude/agents/`.
 
 ---
 
-*M5 HSS AI-dev L1. Skills built and tested by course author.*
+*M5 HSS AI-dev L1. Subagents built and tested by course author.*
