@@ -46,6 +46,7 @@ proshop_mern/homework-m6/
 │   └── tests/                       ← characterization tests (ДО фиксов)
 ├── stage3-living-docs/
 │   ├── 00-plan.md                   ← output /plan brainstorm — что и в каком порядке
+│   ├── docs-audit.md                ← ⭐ verdict per existing doc (✅/🔄/📦/❌)
 │   ├── project-index.json           ← готовый файл (копия из корня fork)
 │   ├── update_project_index.py      ← скрипт обновления (копия из .claude/scripts/)
 │   ├── docs-new/                    ← новая структура docs/ (копия из корня fork)
@@ -370,9 +371,14 @@ git commit -m "chore(docs): archive old docs before M6 living docs setup"
 
 Старая docs/ не пропадает — она остаётся в `docs-archived-...` для истории.
 
-#### Шаг 3.2 — Запустить `legacy-auditor-mate` как orchestrator
+#### Шаг 3.2 — Войти в роль `legacy-auditor-mate` (НЕ через Task!)
 
-⭐ **Главное отличие от других стейджей:** здесь мы используем **специального orchestrator-агента** (`legacy-auditor-mate`) который САМ планирует и запускает sub-agents.
+⭐ **Главное отличие от других стейджей:** мы используем **специального orchestrator-агента** (`legacy-auditor-mate`) который САМ планирует и запускает sub-agents.
+
+⚠️ **КРИТИЧНО:** этого агента **НЕЛЬЗЯ запускать через Task tool как sub-agent**. Почему: sub-agent через Task получает ограниченный набор tools и **не может сам спавнить другие sub-agents**. А auditor должен спавнить security/performance/architecture mate'ов. Поэтому:
+
+- ❌ **НЕ делай так:** `Use the Task tool to spawn legacy-auditor-mate`
+- ✅ **Делай так:** в main CC сессии пишешь «Read .claude/agents/legacy-auditor-mate.md and act according to that role» — CC **входит в роль** auditor'а сам, оставаясь в главной сессии с полным набором tools (включая Task для дочерних спавнов).
 
 Сначала **скопируй legacy-auditor** в свой fork:
 
@@ -387,32 +393,39 @@ Verify что у тебя в `.claude/agents/` теперь 4 файла:
 - `architecture-mate.md`
 - `legacy-auditor-mate.md` ⭐ новый orchestrator
 
-Запусти CC в plan mode (Shift+Tab+Tab или `/plan` команда):
+**Войди в роль auditor'а + активируй plan mode.** В main CC сессии:
+
+1. **Включи plan mode:** нажми `Shift+Tab+Tab` (toggle) ИЛИ напиши `/plan` в начале промпта
+2. **Вставь промпт role-entry:**
 
 ```
 /plan
 
-Act as legacy-auditor-mate (read .claude/agents/legacy-auditor-mate.md for your role).
+Read .claude/agents/legacy-auditor-mate.md and act according to that role
+for the rest of this conversation. Follow your 6-phase workflow.
 
-This is M6 homework Stage 3. Goal: set up living documentation for my proshop_mern fork.
+This is M6 homework Stage 3. Goal: set up living documentation for my proshop_mern fork
+WHILE preserving valuable existing docs (don't trash everything).
 
-Follow your 5-phase workflow:
-- Phase 1 (DISCOVERY): read AGENTS.md/CLAUDE.md/README.md/docs/adr/* (if exist),
-  walk repo structure, identify subprojects, find legacy markers
+Apply your 6 phases:
+- Phase 1 (DISCOVERY): read AGENTS.md/CLAUDE.md/README.md, walk repo structure,
+  identify subprojects, find legacy markers
+- Phase 1.5 (EXISTING DOCS AUDIT) ⭐: read each docs/<folder> and docs/<file>,
+  classify as ✅ ACCURATE / 🔄 PARTIALLY ACCURATE / 📦 HISTORICAL / ❌ STALE,
+  output to homework-m6/stage3-living-docs/docs-audit.md
 - Phase 2 (PLAN): write homework-m6/stage3-living-docs/00-plan.md with full TODO list
-  for Phases 3-5. Include time estimates and risks.
-- Phase 3 (DISPATCH): use Task tool to spawn security-mate, performance-mate, architecture-mate
-  in parallel on my M3-M5 modules (mcp/, rag/, backend/controllers/featureFlagController.js).
-  Then apply 4-step reverse engineering per module yourself.
-- Phase 4 (AGGREGATE): synthesize 3 mate reports + reverse-eng specs into:
-  - homework-m6/stage1-code-review/synthesis.md
-  - project-index.json in repo root
-  - new docs/ structure (README, specs/, adr/, architecture/)
-- Phase 5 (AUTOMATE): copy update_project_index.py, configure hook,
-  update AGENTS.md with maintenance sections.
+  referencing docs-audit.md verdicts (don't blindly archive everything)
+- Phase 3 (DISPATCH): spawn security-mate, performance-mate, architecture-mate via Task tool
+  on my M3-M5 modules. Then apply 4-step reverse engineering per module yourself.
+- Phase 4 (AGGREGATE): synthesize reports + reverse-eng specs. Build docs-new/ FROM accurate
+  existing docs + new specs. Atomic swap: docs/ → docs-archived-YYYY-MM-DD/, docs-new/ → docs/
+- Phase 5 (AUTOMATE): copy update_project_index.py, configure hook, update AGENTS.md
 
-CRITICAL: Stay in Plan mode for Phase 1 and Phase 2. Wait for my approval before
-executing Phase 3-5. Explicitly announce phase transitions.
+CRITICAL constraints:
+- Stay in Plan mode for Phase 1, 1.5, 2. Wait for my approval before Phase 3-5.
+- Do NOT trash all existing docs — use Phase 1.5 verdicts to decide per item.
+- Spawn sub-agents via Task tool — you're the main session, you have full tools.
+- Explicitly announce phase transitions.
 
 Reference materials (read these first):
 - aidev-course-materials/M6/6.2-living-documentation/multi-level-docs-stack.md
@@ -422,7 +435,7 @@ Reference materials (read these first):
 - aidev-course-materials/M6/6.2-living-documentation/example-hooks/update_project_index.py
 ```
 
-`legacy-auditor-mate` выполнит **Phase 1 (Discovery) + Phase 2 (Plan)** и **остановится** на запросе approval. Прочитай `00-plan.md`, дай feedback если что-то пропустил, потом скажи:
+`legacy-auditor-mate` (твой main CC в этой роли) выполнит **Phase 1 + 1.5 (Existing Docs Audit) + Phase 2** и **остановится** на запросе approval. Прочитай **сначала `docs-audit.md`** (что предлагается сохранить / обновить / архивировать) — это самое важное решение в этом стейдже. Потом `00-plan.md` с TODO. Если согласен:
 
 ```
 Plan approved. Switch to EXECUTE mode and proceed with Phase 3-5.
@@ -614,6 +627,7 @@ git diff HEAD~ AGENTS.md > homework-m6/stage3-living-docs/AGENTS-md-diff.md
 #### Файлы в submission папке
 
 - [ ] `homework-m6/stage3-living-docs/00-plan.md` (с галочками выполненных подзадач)
+- [ ] `homework-m6/stage3-living-docs/docs-audit.md` ⭐ — verdict per existing doc folder/file (✅ ACCURATE / 🔄 PARTIALLY / 📦 HISTORICAL / ❌ STALE)
 - [ ] `homework-m6/stage3-living-docs/project-index.json`
 - [ ] `homework-m6/stage3-living-docs/update_project_index.py`
 - [ ] `homework-m6/stage3-living-docs/docs-new/` (содержит README + specs + adr + architecture)
