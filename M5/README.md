@@ -18,6 +18,7 @@
 | `agents/n8n-workflow-builder.md` | CC-субагент: spec → валидный n8n JSON |
 | `guides/browser-use-prompt-injection-defenses.md` | Отдельный security-reference: как защищают от prompt injection в browser-агентах (теория, не про домашку, читать опционально) |
 | `guides/crewai-vs-n8n.md` | Сравнение CrewAI и n8n: когда что выбирать, гибридный паттерн |
+| `guides/cloud-n8n-local-services.md` | **Если ваш n8n в облаке, а MCP/Dashboard/logs локально:** как пробросить локальные сервисы публичным HTTPS через Cloudflare quick tunnel. Docker Compose-фрагмент + примеры нод. Не часть требований домашки — справочник для совпадающего сценария. |
 | `n8n Workflows/` | External community templates для самостоятельного изучения (awesome-n8n-templates, n8n-workflows). Не относится к сдаче — reference. |
 
 ## Pre-read до занятия

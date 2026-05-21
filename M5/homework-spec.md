@@ -42,6 +42,7 @@
 | MCP-сервер из M3 | 3 tools: `get_feature_info`, `set_feature_state`, `adjust_traffic_rollout`. JSON Schema с `enum` / `min` / `max` / `required` на параметрах | `curl https://your-mcp.com/health` → 200 OK. `mcp-inspector list` → 3 tools |
 | Feature Dashboard из M4 | Список фич, status badges, toggle / slider. Хотя бы одна тестовая фича типа `search_v2` | Открыть Dashboard в браузере → видны фичи |
 | n8n инстанс | Cloud free tier (https://app.n8n.io), self-host docker, или n8n-install (https://github.com/kossakovsky/n8n-install) | Открыть `http://localhost:5678` или cloud URL → видно UI редактора |
+| (опционально) Cloudflare tunnel | Если n8n у вас облачный, а MCP/Dashboard/logs локально — облако не достучится до `localhost`. Решение в `guides/cloud-n8n-local-services.md` (Docker Compose-фрагмент с `cloudflare/cloudflared`, эфемерный публичный HTTPS, free, ноль конфигурации). Не нужно если n8n self-host на той же машине что и backend | `docker compose logs mcp-tunnel \| grep trycloudflare.com` |
 | Telegram-бот | Создан через @BotFather, токен сохранён в n8n credentials, chat_id найден | Webhook curl `getMe` → `{"ok": true, "result": {...}}` |
 | Python 3.10+ | Для запуска симуляторов (используется `requests`, `numpy`, `math`) | `python3 --version` → 3.10+ |
 | Claude Code | Для использования двух M5-субагентов: `n8n-requirements-orchestrator` + `n8n-workflow-builder` | `ls ~/.claude/agents \| grep n8n` → 2 файла (`.md`) |
@@ -900,6 +901,8 @@ python3 simulate_wf2.py --duration 600 --period 120
 JSON-файл выбран для простоты. **Если у n8n self-host другой filesystem**:
 - Docker — `volume mount`: `-v $(pwd)/logs:/data/logs`, в Code Node читать по `/data/logs/logs.json`
 - n8n cloud — нужен другой backend (Postgres / Redis Stream / S3) или прокидывание через HTTP
+
+**Если n8n в облаке, а `logs.json` у вас локально** — самый быстрый путь это поднять локальный HTTP-сервер на файле (`python3 -m http.server` в Docker) и закрыть его Cloudflare quick tunnel. Тогда нода `GET Logs` (HTTP Request) в WF2 ходит на публичный HTTPS-URL, а файл остаётся на вашей машине. Готовый Docker Compose-фрагмент + примеры нод — в `guides/cloud-n8n-local-services.md`. Тот же tunnel-паттерн пригодится для MCP-сервера из M3.
 
 Альтернативы (если хотите — отметьте в README):
 - Postgres-таблица `traffic_events` с теми же полями
