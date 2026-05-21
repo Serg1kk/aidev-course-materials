@@ -132,7 +132,7 @@ jobs:
           if [ ! -d ".claude/agents" ]; then
             echo "❌ .claude/agents/ folder not found. Cannot spawn Agent Team."
             echo "   Copy security-mate.md, architecture-mate.md, performance-mate.md from"
-            echo "   aidev-course-materials/M6/6.1-ai-code-review/cloud-agent-team/agents/"
+            echo "   aidev-course-materials/M6/agents/"
             exit 1
           fi
           echo "✅ Agent definitions:"

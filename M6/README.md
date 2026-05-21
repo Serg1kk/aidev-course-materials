@@ -19,8 +19,9 @@
 
 | Файл / папка | Зачем |
 |---|---|
-| `homework-spec.md` | **Главный файл — полное ТЗ домашки** (5 stages, ~6-8 часов работы, выбор треков по сложности) |
-| `6.1-ai-code-review/` | Topic 6.1: AI Code Review + Agent Teams. Рецепты + сравнение тулов + honest risks |
+| `homework-spec.md` | **Главный файл — полное ТЗ домашки** (4 stages, ~7-9 часов работы) |
+| `agents/` | Shared библиотека из 5 универсальных mate-агентов (security / architecture / performance / legacy-auditor / test-writer) + README + templates/ |
+| `6.1-ai-code-review/` | Topic 6.1: AI Code Review + Agent Teams. Рецепты + сравнение тулов + honest risks + cloud GitHub Action |
 | `6.2-living-documentation/` | Topic 6.2: Living Documentation, AGENTS.md/CLAUDE.md, inline comments, project-index.json |
 | `6.3-legacy-strategies/` | Topic 6.3: Стратегии работы с legacy. 4-step CC reverse engineering + 7 правил безопасного refactor |
 | `6.4-synthetic-testing/` | Topic 6.4: Synthetic testing, mutation testing, coverage vs MSI, CI/CD layered strategy |

@@ -1,15 +1,15 @@
-# Cloud Agent Team — готовый пакет для запуска AI Code Review
+# Cloud Agent Team — GitHub Actions workflow для AI Code Review
 
-Папка содержит **production-ready** конфигурацию для запуска review через Claude Code:
+Папка содержит **production-ready** конфигурацию для запуска review через Claude Code в GitHub Actions:
 
-| Файл / папка | Что |
+| Файл | Что |
 |---|---|
-| `agents/security-mate.md` | Sub-agent definition для security review (OWASP Top 10, secrets, crypto) |
-| `agents/architecture-mate.md` | Sub-agent definition для architecture review (layer boundaries, ADR compliance) |
-| `agents/performance-mate.md` | Sub-agent definition для performance review (N+1, memory, throughput) |
 | `claude-pr-review.yml` | GitHub Actions workflow с двумя режимами (single agent + Agent Team) |
+| `README.md` | Этот файл — обзор cloud-режима, setup, стоимость, mailbox |
 
-Все 3 агента работают на **Opus 4.7** (`claude-opus-4-7`) с **read-only tools** (Read / Grep / Glob / Bash для безопасных команд типа `gh pr diff`).
+> ⚠️ **Sub-agent definitions переехали** в [`../../agents/`](../../agents/) — это shared библиотека на весь M6 (не только для cloud-режима). Все 5 mate-агентов (`security-mate`, `architecture-mate`, `performance-mate`, `legacy-auditor-mate`, `test-writer-mate`) лежат там.
+
+Все agent-файлы работают на **Opus 4.7** (`claude-opus-4-7`) с **read-only tools** (Read / Grep / Glob / Bash для безопасных команд типа `gh pr diff`).
 
 ---
 
@@ -17,10 +17,10 @@
 
 ### Вариант A — локально в Claude Code сессии
 
-1. Скопируй `agents/*.md` в свой проект:
+1. Скопируй mate-агентов из `M6/agents/` в свой проект:
    ```bash
    mkdir -p .claude/agents
-   cp -r cloud-agent-team/agents/* .claude/agents/
+   cp aidev-course-materials/M6/agents/*.md .claude/agents/
    ```
 
 2. Включи Agent Teams flag в `.claude/settings.json`:

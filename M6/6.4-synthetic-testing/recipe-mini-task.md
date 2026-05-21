@@ -1,6 +1,6 @@
 # Recipe: Mini-task «Mutation testing на своём коде»
 
-Практическое задание Stage 5 (домашка M6). Время: ~75 минут. Цель: лично измерить gap coverage vs MSI на своём Python модуле и поднять MSI выше 70%.
+Практическое задание Stage 4 (домашка M6, bonus-уровень). Время: ~75 минут. Цель: лично измерить gap coverage vs MSI на своём Python модуле и поднять MSI выше 70%.
 
 ---
 
@@ -191,7 +191,7 @@ cr-report cosmic-ray.toml
 - Какой тип assertions был самым слабым (обычно: `is not None`, `len > 0`, `isinstance`).
 - Что удивило.
 
-Этот анализ — часть submission Stage 5.
+Этот анализ — bonus-часть submission Stage 4 (см. checklist в `homework-spec.md`).
 
 ---
 

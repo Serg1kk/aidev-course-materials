@@ -6,12 +6,15 @@
 
 ## Что в этой папке
 
-| Файл | Что внутри |
+| Файл / папка | Что внутри |
 |---|---|
 | `README.md` | Этот файл: обзор темы, ключевые идеи, ссылки |
 | `tools-catalog.md` | Сравнение 5 инструментов AI Code Review (май 2026) |
-| `recipe-agent-team-setup.md` | Пошаговый рецепт: Claude Code Agent Teams + GitHub Actions |
+| `claude-code-review-setup.md` | Универсальный setup-доку: 4 механизма запуска review (locally / hooks / GitHub Action single / Agent Team) |
+| `cloud-agent-team/` | Production-ready GitHub Actions workflow (single + team) для cloud-режима |
 | `honest-risks.md` | 5 production-рисков с митигациями и источниками |
+
+> Все mate-агенты (security / architecture / performance / legacy-auditor / test-writer) живут в shared библиотеке [`../agents/`](../agents/) на уровне модуля.
 
 ---
 
@@ -32,8 +35,9 @@
 ## После урока — что читать первым
 
 1. `tools-catalog.md` — выбрать тул для своей команды (таблица + рейтинг Signal/Noise).
-2. `recipe-agent-team-setup.md` — скопировать `claude-pr-review.yml` в свой репо, настроить за 15 минут.
-3. `honest-risks.md` — изучить 5 рисков перед production rollout.
+2. `claude-code-review-setup.md` — выбрать механизм запуска (4 варианта, цена + reliability + setup-сложность).
+3. `cloud-agent-team/README.md` + `cloud-agent-team/claude-pr-review.yml` — скопировать workflow в свой репо, настроить за 15 минут.
+4. `honest-risks.md` — изучить 5 рисков перед production rollout.
 
 ---
 

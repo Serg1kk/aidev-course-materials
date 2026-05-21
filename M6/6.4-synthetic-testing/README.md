@@ -11,7 +11,7 @@
 | `README.md` | Навигатор, главные идеи, ссылки | Сначала |
 | `coverage-vs-msi.md` | Объяснение центральной метрики: coverage % vs MSI | Перед практикой |
 | `tools-landscape.md` | Ландшафт 7 инструментов с decision-матрицей | При выборе инструмента |
-| `recipe-mini-task.md` | Рецепт mini-task ~75 мин на своём Python модуле | Stage 5 домашки |
+| `recipe-mini-task.md` | Рецепт mini-task ~75 мин на своём Python модуле | Stage 4 домашки |
 | `recipe-ci-cd-layered.md` | CI/CD layered strategy, 5 уровней, YAML пример | При настройке CI |
 
 ---

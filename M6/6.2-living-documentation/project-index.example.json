@@ -536,7 +536,7 @@
   },
   "notes": {
     "upstream_status": "bradtraversy/proshop_mern is officially deprecated in favor of proshop-v2 (Redux Toolkit). We keep the original intentionally 'old' for realistic onboarding problems.",
-    "course_context": "This is a course fork used for HSS AI-dev Level 1 modules (M2-M7 homework). Serg works through assignments here, leaving reference solutions for students.",
+    "course_context": "This is a course fork used as a baseline for AI-dev course homework (modules M2-M7). Reference solutions for students live in feature branches.",
     "mcp_servers": "Two MCP servers configured in .mcp.json: (1) feature-flags (Python), (2) search-docs (Node.js). Both are project-local implementations.",
     "frontend_proxy_note": "frontend/package.json proxy is set to http://127.0.0.1:5006 in file but AGENTS.md says 5001 — use 5001 (correct for backend)",
     "env_note": "Root .env is source of truth. PAYPAL_CLIENT_ID=sb is sandbox safe to commit in .env.example. Never commit actual .env file.",

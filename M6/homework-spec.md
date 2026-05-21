@@ -13,7 +13,7 @@
 |---|---|---|---|---|
 | 1 | **Multi-Agent Code Review** | Запускаем 3 sub-agents последовательно (security → performance → architecture) + final synthesizer → получаем `synthesis.md` | 1.5-2 ч | Все промежуточные review + `synthesis.md` |
 | 2 | **Fix Top-3** | Из `synthesis.md` берём 3 самых критичных findings, чиним через safe-refactor recipe | 1.5-2 ч | 3 diff'а + characterization tests прошли |
-| 3 | **Legacy Audit + Living Documentation** | В CC запускаем `/plan` brainstorm: «спланируй audit и living docs для моего fork`а». Plan включает: project-index.json + 4-step reverse engineering на M3-M5 + новая docs/ + Python скрипт автообновления + AGENTS.md секции про поддержку. Старую docs/ архивируем. | 2.5-3.5 ч | project-index.json + docs/ specs + update_project_index.py + AGENTS.md diff + (опц.) hook |
+| 3 | **Legacy Audit + Living Documentation** | Входим в роль `legacy-auditor-mate` (plan-mode orchestrator) и даём ему **PROJECT CONTEXT** про твой fork. Он сам walks структуру, аудитит существующую docs/ (✅/🔄/📦/❌), планирует, после approval спавнит security/performance/architecture-mate'ов через Task, делает 4-step reverse engineering на M3-M5, собирает project-index.json + новую docs/ + update_project_index.py + AGENTS.md секции. Старую docs/ — только то что 📦/❌ — архивируем. | 2.5-3.5 ч | project-index.json + docs/ specs + update_project_index.py + AGENTS.md diff + (опц.) hook |
 | 4 | **Tests Agent** | Создаём `test-writer-mate.md`, прогоняем на 2 сервисах из своего кода | 1-1.5 ч | Agent definition + сгенерированные тесты + прогон |
 
 **Все ссылки на агентов и шаблоны** — в студ-репо `aidev-course-materials/M6/`.
@@ -25,7 +25,14 @@
 - [ ] Свой fork `proshop_mern` с твоим кодом M3-M5 (MCP / RAG / feature flags / dashboard)
 - [ ] Claude Code установлен, `claude --version` ≥ v2.1.32
 - [ ] `ANTHROPIC_API_KEY` в env или login сделан (`claude /login`)
-- [ ] Скопируй 3 mate-агентов из `aidev-course-materials/M6/6.1-ai-code-review/cloud-agent-team/agents/` в свой fork в `.claude/agents/`
+- [ ] Скопируй mate-агентов в свой fork:
+  ```bash
+  mkdir -p .claude/agents
+  cp aidev-course-materials/M6/agents/*.md .claude/agents/
+  # optional, only if you plan to run legacy-auditor with the template:
+  cp -r aidev-course-materials/M6/agents/templates .claude/agents/templates
+  ```
+  Все 5 mate-агентов (security / architecture / performance / legacy-auditor / test-writer) — **универсальные**, работают на любом репо. Project-specific контекст ты будешь передавать в spawn-промптах / role-entry (см. Stage 1 и Stage 3).
 - [ ] Свободный slot времени 7-9 часов на следующие 2 недели
 
 ---
@@ -85,13 +92,33 @@ proshop_mern/homework-m6/
 
 В CC сессии запускаешь по очереди:
 
+> **Важно про универсальность.** System prompts всех 5 mate-агентов — **полностью project-agnostic**. Project-specific контекст (стек, ADR-папка, scope) ты передаёшь в **каждом** spawn-промпте. Ниже шаблоны уже содержат `PROJECT CONTEXT` блок под `proshop_mern` — адаптируй под свой fork (если изменил структуру).
+
 **Шаг 1.1 — Security review:**
 
 ```
-Use the Agent tool to spawn security-mate (from .claude/agents/security-mate.md).
-Scope: all backend/ files in my M3-M5 modules (mcp/, rag/, controllers/featureFlagController.js).
-Output findings as JSON to homework-m6/stage1-code-review/security-review.md
-in markdown format with severity grouping.
+Use the Agent tool to spawn security-mate from .claude/agents/security-mate.md.
+
+PROJECT CONTEXT
+- Repo: proshop_mern fork (MERN e-commerce + custom MCP/RAG/feature-flags layers)
+- Stack: Node + Express + Mongoose + MongoDB + React + Python MCP server + Node RAG server
+- AGENTS.md at root (read first), CLAUDE.md (read first)
+- ADRs at docs/adr/ if present (read first)
+- Auth model: JWT-based, password hashing via bcrypt
+
+SCOPE
+- backend/controllers/*.js, backend/middleware/*.js, backend/routes/*.js
+- mcp/feature_flags_server.py (and any other mcp/*.py)
+- rag/server.js (and any other rag/*.js)
+- Out of scope: __tests__/, scripts/, frontend/public/
+
+OUTPUTS
+- JSONL findings: homework-m6/stage1-code-review/security-findings.jsonl
+- Human summary (markdown, severity-grouped): homework-m6/stage1-code-review/security-review.md
+
+CONSTRAINTS
+- Read-only.
+- Aim for 8-20 quality findings.
 ```
 
 Получишь `security-review.md`. **Не переходи дальше пока не прочитаешь.**
@@ -99,20 +126,43 @@ in markdown format with severity grouping.
 **Шаг 1.2 — Performance review:**
 
 ```
-Use the Agent tool to spawn performance-mate (from .claude/agents/performance-mate.md).
-Same scope as security. Also check N+1 patterns, missing pagination, blocking I/O.
-Output to homework-m6/stage1-code-review/performance-review.md.
-Reference findings from security-review.md if there's overlap (e.g. ReDoS).
+Use the Agent tool to spawn performance-mate from .claude/agents/performance-mate.md.
+
+PROJECT CONTEXT
+- Same as Step 1.1 (paste the same block).
+- Runtime models in scope: Node.js event loop (Express + RAG) + Python sync (MCP server).
+- Known hot paths: /api/orders, /api/products (list), MCP feature-flag endpoint.
+
+SCOPE
+- Same files as Step 1.1.
+- Also check: N+1 patterns, missing pagination, blocking I/O, missing caching.
+
+OUTPUTS
+- homework-m6/stage1-code-review/performance-findings.jsonl
+- homework-m6/stage1-code-review/performance-review.md
+
+Reference findings from security-review.md if there is overlap (e.g. ReDoS).
 ```
 
 **Шаг 1.3 — Architecture review:**
 
 ```
-Use the Agent tool to spawn architecture-mate (from .claude/agents/architecture-mate.md).
-Same scope. Read docs/adr/* first if it exists in my fork.
+Use the Agent tool to spawn architecture-mate from .claude/agents/architecture-mate.md.
+
+PROJECT CONTEXT
+- Same as Step 1.1.
+- Layering convention: controller → service → model (Mongoose). MCP and RAG live in their own folders with their own internal layering.
+- Read docs/adr/*.md FIRST if it exists.
+
+SCOPE
+- Same files as Step 1.1.
+
+OUTPUTS
+- homework-m6/stage1-code-review/architecture-findings.jsonl
+- homework-m6/stage1-code-review/architecture-review.md
+- Propose 1-2 new ADRs if you find undocumented architectural decisions.
+
 Cross-reference security-review.md and performance-review.md.
-Output to homework-m6/stage1-code-review/architecture-review.md.
-Propose 1-2 new ADRs if you find undocumented architectural decisions.
 ```
 
 **Шаг 1.4 — Final synthesizer:**
@@ -227,7 +277,7 @@ Use peer-to-peer mailbox for cross-category findings.
 ### Recipe-ссылки
 
 - [`6.1-ai-code-review/claude-code-review-setup.md`](https://github.com/Serg1kk/aidev-course-materials/blob/main/M6/6.1-ai-code-review/claude-code-review-setup.md) — все 4 способа запуска review
-- [`6.1-ai-code-review/cloud-agent-team/agents/`](https://github.com/Serg1kk/aidev-course-materials/tree/main/M6/6.1-ai-code-review/cloud-agent-team/agents) — готовые mate-агенты (security/architecture/performance)
+- [`agents/`](https://github.com/Serg1kk/aidev-course-materials/tree/main/M6/agents) — готовые mate-агенты (security/architecture/performance/legacy-auditor/test-writer) + README со схемой вызова
 - [`6.1-ai-code-review/honest-risks.md`](https://github.com/Serg1kk/aidev-course-materials/blob/main/M6/6.1-ai-code-review/honest-risks.md) — что не делать
 
 ---
@@ -380,54 +430,64 @@ git commit -m "chore(docs): archive old docs before M6 living docs setup"
 - ❌ **НЕ делай так:** `Use the Task tool to spawn legacy-auditor-mate`
 - ✅ **Делай так:** в main CC сессии пишешь «Read .claude/agents/legacy-auditor-mate.md and act according to that role» — CC **входит в роль** auditor'а сам, оставаясь в главной сессии с полным набором tools (включая Task для дочерних спавнов).
 
-Сначала **скопируй legacy-auditor** в свой fork:
+Verify что у тебя в `.claude/agents/` уже лежат все 5 mate-файлов (после Pre-requisites):
 
 ```bash
-cp aidev-course-materials/M6/6.1-ai-code-review/cloud-agent-team/agents/legacy-auditor-mate.md \
-   .claude/agents/legacy-auditor-mate.md
+ls .claude/agents/
+# security-mate.md
+# performance-mate.md
+# architecture-mate.md
+# legacy-auditor-mate.md  ← orchestrator для этого Stage
+# test-writer-mate.md     ← пригодится в Stage 4
 ```
 
-Verify что у тебя в `.claude/agents/` теперь 4 файла:
-- `security-mate.md`
-- `performance-mate.md`
-- `architecture-mate.md`
-- `legacy-auditor-mate.md` ⭐ новый orchestrator
+Если чего-то нет — пересмотри Pre-requisites выше (там `cp aidev-course-materials/M6/agents/*.md .claude/agents/`).
 
 **Войди в роль auditor'а + активируй plan mode.** В main CC сессии:
 
 1. **Включи plan mode:** нажми `Shift+Tab+Tab` (toggle) ИЛИ напиши `/plan` в начале промпта
-2. **Вставь промпт role-entry:**
+2. **Вставь промпт role-entry** (контекст ниже подобран под `proshop_mern` — поправь поля под свой fork если изменил структуру):
 
 ```
 /plan
 
 Read .claude/agents/legacy-auditor-mate.md and act according to that role
-for the rest of this conversation. Follow your 6-phase workflow.
+for the rest of this conversation. Follow your phase workflow.
 
-This is M6 homework Stage 3. Goal: set up living documentation for my proshop_mern fork
-WHILE preserving valuable existing docs (don't trash everything).
+PROJECT CONTEXT
+- Repo: proshop_mern fork (MERN e-commerce + custom MCP/RAG/feature-flags layers)
+- Type: fullstack-monorepo
+- Stack: Node + Express + Mongoose + MongoDB + React + Python MCP server + Node RAG server
+- Subprojects to discover yourself: backend/, frontend/, mcp/, rag/, possibly others
+- Existing docs: at docs/ (likely substantial — audit carefully, don't trash)
+- Audit scope: my M3-M5 modules (backend/controllers + mcp/ + rag/ + feature-flags layer)
+- Output directory: homework-m6/stage3-living-docs/  ← all reports + plan + docs-audit go here
+- Extra constraints: keep docs/adr/ intact if it exists; do not delete characterization tests if present
 
-Apply your 6 phases:
-- Phase 1 (DISCOVERY): read AGENTS.md/CLAUDE.md/README.md, walk repo structure,
-  identify subprojects, find legacy markers
-- Phase 1.5 (EXISTING DOCS AUDIT) ⭐: read each docs/<folder> and docs/<file>,
-  classify as ✅ ACCURATE / 🔄 PARTIALLY ACCURATE / 📦 HISTORICAL / ❌ STALE,
-  output to homework-m6/stage3-living-docs/docs-audit.md
+WORKFLOW EXPECTATIONS
+- Phase 1 (DISCOVERY): walk structure, detect stack from manifests, identify subprojects
+- Phase 1.5 (EXISTING DOCS AUDIT) ⭐: classify each existing docs/ folder + top-level MD into
+  ✅ ACCURATE / 🔄 PARTIALLY ACCURATE / 📦 HISTORICAL / ❌ STALE. Use the template at
+  .claude/agents/templates/docs-audit.template.md as your output structure. Write to
+  homework-m6/stage3-living-docs/docs-audit.md
 - Phase 2 (PLAN): write homework-m6/stage3-living-docs/00-plan.md with full TODO list
-  referencing docs-audit.md verdicts (don't blindly archive everything)
-- Phase 3 (DISPATCH): spawn security-mate, performance-mate, architecture-mate via Task tool
-  on my M3-M5 modules. Then apply 4-step reverse engineering per module yourself.
-- Phase 4 (AGGREGATE): synthesize reports + reverse-eng specs. Build docs-new/ FROM accurate
-  existing docs + new specs. Atomic swap: docs/ → docs-archived-YYYY-MM-DD/, docs-new/ → docs/
+  referencing docs-audit.md verdicts
+- Phase 3 (DISPATCH): spawn security-mate / performance-mate / architecture-mate via Task tool
+  with PROJECT CONTEXT blocks + concrete scope per spawn. Then run 4-step reverse engineering
+  per module yourself (output: homework-m6/stage3-living-docs/specs/<module>-spec.md)
+- Phase 4 (AGGREGATE): synthesize reports + specs into homework-m6/stage1-code-review/synthesis.md
+  (or under stage3-living-docs/ if you prefer keeping Stage 1 output untouched).
+  Build docs-new/ FROM ✅/🔄 existing docs + new specs. Atomic swap: docs/ → docs-archived-YYYY-MM-DD/
 - Phase 5 (AUTOMATE): copy update_project_index.py, configure hook, update AGENTS.md
 
-CRITICAL constraints:
+CRITICAL constraints
 - Stay in Plan mode for Phase 1, 1.5, 2. Wait for my approval before Phase 3-5.
 - Do NOT trash all existing docs — use Phase 1.5 verdicts to decide per item.
-- Spawn sub-agents via Task tool — you're the main session, you have full tools.
+- Spawn sub-agents via Task tool — you are the main session and you have full tools.
 - Explicitly announce phase transitions.
 
-Reference materials (read these first):
+Reference materials to read in Phase 1
+- aidev-course-materials/M6/agents/templates/docs-audit.template.md   ← Phase 1.5 output template
 - aidev-course-materials/M6/6.2-living-documentation/multi-level-docs-stack.md
 - aidev-course-materials/M6/6.2-living-documentation/keeping-docs-current.md
 - aidev-course-materials/M6/6.2-living-documentation/project-index.example.json
@@ -680,7 +740,7 @@ git diff HEAD~ AGENTS.md > homework-m6/stage3-living-docs/AGENTS-md-diff.md
 
 ### 🎯 Цель
 
-Создать **отдельного sub-agent для написания тестов** + прогнать его на 2 сервисах из своего кода. Это естественное продолжение Stage 4: ты уже знаешь что код делает (через specs), теперь пиши тесты которые это проверяют.
+Использовать **отдельного sub-agent для написания тестов** + прогнать его на 2 сервисах из своего кода. Это естественное продолжение Stage 3: ты уже знаешь что код делает (через specs из reverse engineering), теперь пиши тесты которые это проверяют.
 
 ### Почему отдельный test-агент
 
@@ -688,76 +748,24 @@ git diff HEAD~ AGENTS.md > homework-m6/stage3-living-docs/AGENTS-md-diff.md
 - test-writer-mate — это **write-агент** (генерирует код тестов)
 - Разделение: review-агенты тестов **не пишут**, иначе они находят проблемы под свои же тесты (см. Topic 6.4 «Fake test coverage»)
 
-### Шаг 4.1 — Создать `test-writer-mate.md`
+### Шаг 4.1 — Проверить что `test-writer-mate` есть в `.claude/agents/`
 
-В `.claude/agents/test-writer-mate.md` создай новый agent definition. Шаблон (адаптируй под свой стек):
+Pre-built универсальный агент уже скопирован в твой fork (по Pre-requisites выше). Verify:
 
-```markdown
----
-name: test-writer-mate
-description: Test-writing specialist. Generates unit + integration tests with strong assertions (no `assert not None`). Aims for high MSI, not just coverage.
-model: claude-opus-4-7
-tools: [Read, Grep, Glob, Write]
-when_to_use: Writing tests for new or refactored code. NOT for reviewing tests (use security/architecture mate).
-category: testing
----
-
-# Test Writer Mate
-
-You are a Senior Test Engineer. Your role: write STRONG tests that catch real bugs,
-not weak tests that just hit coverage gates.
-
-## ROLE-LOCK
-
-- You ONLY write test code. You don't write production code.
-- You don't modify production source files.
-- You don't run mutmut yourself (that's mutation-tester-mate's job).
-
-## Strong test principles
-
-- **Assertions must check VALUES**, not just `not None`. Bad: `assert response is not None`. Good: `assert response.status == 200 and response.body['user_id'] == 42`
-- **One test = one behavior** — don't pile 5 assertions on different behaviors in one test
-- **Edge cases first** — happy path is obvious, edge cases catch real bugs
-- **No try-catch wrappers** that swallow exceptions
-- **No `assert 2 + 2 == 4`** trivial tests just for coverage
-- **Use realistic test data** — not just `"foo"` / `"bar"`, use values that mimic production
-
-## Test types
-
-- **Unit tests**: pure functions, single-file logic. Fast (< 1 sec each).
-- **Integration tests**: with DB / HTTP / file system. Slower (1-5 sec).
-
-For each function/endpoint you test, write:
-1. 1 happy path test
-2. 2-3 edge case tests (boundary values, empty input, large input)
-3. 1-2 error path tests (auth fail, validation fail, DB timeout)
-4. 1 security test if endpoint has security implications (injection, oversized payload)
-
-## Output format
-
-For each tested file, create:
-- `<service>/__tests__/<file>.test.js` (or .py / .ts based on stack)
-
-Use the existing test framework (jest for JS, pytest for Python).
-Match the existing test style if there are existing tests in the project.
-
-After writing, list the tests with one-line descriptions in markdown:
-
-```
-- test_login_happy_path: valid creds → 200 + user object
-- test_login_wrong_password: invalid creds → 401
-- test_login_missing_email: missing field → 400 with validation error
-- ...
+```bash
+ls -1 .claude/agents/test-writer-mate.md
+# должен показать файл
 ```
 
-## Anti-patterns to AVOID
+Если файла нет:
 
-- Mocking everything (then you're testing the mocks, not the code)
-- Tests that depend on test order
-- Tests with hard-coded timestamps that fail on Tuesdays
-- Tests that delete production data (use test DB!)
-- `assert response is not None` — replace with value checks
+```bash
+cp aidev-course-materials/M6/agents/test-writer-mate.md .claude/agents/
 ```
+
+**System prompt этого агента — универсальный** (любой стек, любой test framework). Project-specific вещи (какой framework, какие конвенции, какой scope) передаются в **spawn-промпте**.
+
+> При желании можешь адаптировать system prompt под свой стек (например, добавить специфику pytest fixtures для своих общих фикстур). Это опционально и не оценивается.
 
 ### Шаг 4.2 — Запустить test-writer на 2 сервисах
 
@@ -918,7 +926,7 @@ proshop_mern/homework-m6/
 | M2 (IDE setup) | все | Claude Code установлен + настроен |
 | M3 (MCP) | Stage 1, 4 | review своего MCP сервера, его спецификация |
 | M4 (DESIGN.md) | Stage 4 | архитектурный контекст для reverse eng |
-| M5 (sub-agents) | Stage 1, 5 | паттерн запуска нескольких sub-agents |
+| M5 (sub-agents) | Stage 1, 3, 4 | паттерн запуска нескольких sub-agents (review-team, auditor-orchestrator, test-writer) |
 | M6 — текущий | все | recipes из 6.1-6.4 |
 
 ---
@@ -950,6 +958,3 @@ A: Проверь `claude --version` ≥ v2.1.32, путь к скрипту, `c
 **Q: Сколько времени реально потратишь?**
 A: Минимум **7 часов** если делаешь честно. Если поверхностно (без characterization tests, без MSI) — 4-5 часов, но reviewer (я) увидит и поставит ниже.
 
----
-
-*Этот файл — DRAFT v2. После твоего ревью закоммитим в `aidev-course-materials/M6/homework-spec.md`.*

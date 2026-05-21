@@ -23,18 +23,20 @@
 
 1. **Anthropic API ключ** (получить на https://console.anthropic.com/settings/keys)
 2. **Claude Code установлен** (`npm i -g @anthropic-ai/claude-code`, версия `v2.1.32+` для Agent Teams)
-3. **`.claude/agents/` папка** с 3 mate-файлами — готовые лежат в [`cloud-agent-team/agents/`](cloud-agent-team/agents/):
-   - [`security-mate.md`](cloud-agent-team/agents/security-mate.md) — OWASP Top 10 + secrets + crypto
-   - [`architecture-mate.md`](cloud-agent-team/agents/architecture-mate.md) — layer boundaries + ADR compliance
-   - [`performance-mate.md`](cloud-agent-team/agents/performance-mate.md) — N+1 + memory + throughput
+3. **`.claude/agents/` папка** с mate-файлами — готовая shared библиотека лежит в [`../agents/`](../agents/):
+   - [`security-mate.md`](../agents/security-mate.md) — OWASP Top 10 + secrets + crypto
+   - [`architecture-mate.md`](../agents/architecture-mate.md) — layer boundaries + ADR compliance
+   - [`performance-mate.md`](../agents/performance-mate.md) — N+1 + memory + throughput
+   - [`legacy-auditor-mate.md`](../agents/legacy-auditor-mate.md) — plan-mode orchestrator (для legacy/audit потоков)
+   - [`test-writer-mate.md`](../agents/test-writer-mate.md) — генерация тестов с сильными assertions
 4. **`CLAUDE.md` / `AGENTS.md`** в корне проекта (project-specific rules для всех агентов)
-5. **`docs/adr/*`** если есть (architecture-mate их прочитает перед review)
+5. **`docs/adr/*`** (или эквивалентная папка решений) если есть — architecture-mate их прочитает перед review
 
 Скопировать готовых агентов в свой проект:
 
 ```bash
 mkdir -p .claude/agents
-cp aidev-course-materials/M6/6.1-ai-code-review/cloud-agent-team/agents/*.md .claude/agents/
+cp aidev-course-materials/M6/agents/*.md .claude/agents/
 ```
 
 ---
@@ -397,7 +399,7 @@ Workflow [`cloud-agent-team/claude-pr-review.yml`](cloud-agent-team/claude-pr-re
 
 ### Все 3 слоя сразу
 
-- [ ] `.claude/agents/` с 3 mate-файлами (из `cloud-agent-team/agents/`)
+- [ ] `.claude/agents/` с mate-файлами (из [`../agents/`](../agents/))
 - [ ] `CLAUDE.md` или `AGENTS.md` в корне (context для всех агентов)
 - [ ] `docs/adr/*` если есть (для architecture-mate)
 - [ ] `.husky/pre-commit` — Layer 1 (security on critical paths)
@@ -434,9 +436,12 @@ Workflow [`cloud-agent-team/claude-pr-review.yml`](cloud-agent-team/claude-pr-re
 
 | Файл | Назначение |
 |---|---|
-| [`cloud-agent-team/agents/security-mate.md`](cloud-agent-team/agents/security-mate.md) | Security mate definition (OWASP Top 10) |
-| [`cloud-agent-team/agents/architecture-mate.md`](cloud-agent-team/agents/architecture-mate.md) | Architecture mate definition (layer boundaries + ADR) |
-| [`cloud-agent-team/agents/performance-mate.md`](cloud-agent-team/agents/performance-mate.md) | Performance mate definition (N+1 + memory) |
+| [`../agents/security-mate.md`](../agents/security-mate.md) | Security mate definition (OWASP Top 10) |
+| [`../agents/architecture-mate.md`](../agents/architecture-mate.md) | Architecture mate definition (layer boundaries + ADR) |
+| [`../agents/performance-mate.md`](../agents/performance-mate.md) | Performance mate definition (N+1 + memory) |
+| [`../agents/legacy-auditor-mate.md`](../agents/legacy-auditor-mate.md) | Plan-mode orchestrator (discover repo + dispatch specialists + assemble living docs) |
+| [`../agents/test-writer-mate.md`](../agents/test-writer-mate.md) | Test generation specialist (strong assertions, high MSI) |
+| [`../agents/README.md`](../agents/README.md) | Обзор всей agent-библиотеки + два способа вызова (Task vs role-entry) |
 | [`cloud-agent-team/claude-pr-review.yml`](cloud-agent-team/claude-pr-review.yml) | Production-ready GitHub Action (single + team) |
 | [`cloud-agent-team/README.md`](cloud-agent-team/README.md) | Cloud Agent Team pack overview |
 | [`tools-catalog.md`](tools-catalog.md) | Сравнение Claude Code Action с CodeRabbit / Qodo / Copilot CR + метрики F1/Precision/Recall |
