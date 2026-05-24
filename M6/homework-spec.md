@@ -13,7 +13,7 @@
 |---|---|---|---|---|
 | 1 | **Multi-Agent Code Review** | Запускаем 3 sub-agents последовательно (security → performance → architecture) + final synthesizer → получаем `synthesis.md` | 1.5-2 ч | Все промежуточные review + `synthesis.md` |
 | 2 | **Fix Top-3** | Из `synthesis.md` берём 3 самых критичных findings, чиним через safe-refactor recipe | 1.5-2 ч | 3 diff'а + characterization tests прошли |
-| 3 | **Legacy Audit + Living Documentation** | Входим в роль `legacy-auditor-mate` (plan-mode orchestrator) и даём ему **PROJECT CONTEXT** про твой fork. Он сам walks структуру, аудитит существующую docs/ (✅/🔄/📦/❌), планирует, после approval спавнит security/performance/architecture-mate'ов через Task, делает 4-step reverse engineering на M3-M5, собирает project-index.json + новую docs-структуру + update_project_index.py + секции в корневой конфиг (AGENTS.md/CLAUDE.md). Старые доки — только то что 📦/❌ — архивируем. | 2.5-3.5 ч | project-index.json + specs + update_project_index.py + config diff + (опц.) hook |
+| 3 | **Legacy Audit + Living Documentation** | Входим в роль `legacy-auditor-mate` (plan-mode orchestrator) и даём ему **PROJECT CONTEXT** про твой fork. Он сам walks структуру, аудитит существующую docs/ (✅/🔄/📦/❌), планирует, после approval спавнит security/performance/architecture-mate'ов через Task, делает 4-step reverse engineering на M3-M5, собирает project-index.json + новую docs-структуру + update_project_index.py + секции в корневой конфиг (AGENTS.md/CLAUDE.md). Старые доки — только то что 📦/❌ — архивируем. | 2.5-3.5 ч | project-index.json + specs + update_project_index.py + корневой конфиг с секциями + (опц.) hook |
 | 4 | **Tests Agent** | Создаём `test-writer-mate.md`, прогоняем на 2 сервисах из своего кода | 1-1.5 ч | Agent definition + сгенерированные тесты + прогон |
 
 **Все ссылки на агентов и шаблоны** — в студ-репо `aidev-course-materials/M6/`.
@@ -55,7 +55,9 @@
 | Папка существующих docs | `docs/` **или** `project-data/` | `<...>` |
 | Папка ADR | `docs/adr/` **или** `project-data/adrs/` | `<...>` |
 
-**Если корневой конфиг у тебя `CLAUDE.md` (нет `AGENTS.md`):** везде ниже, где написано «AGENTS.md», читай как «твой корневой конфиг». Для Stage 3 рекомендуется единый приём — создать симлинк `ln -s CLAUDE.md AGENTS.md` (тогда секции и diff лягут на оба файла единообразно). Не хочешь симлинк — добавляй секции прямо в `CLAUDE.md` и снимай diff по нему.
+**Про MCP/RAG-сервисы:** их расположение у всех разное — бывают top-level (`mcp/`, `mcp-servers/`, `mcp-feature-flags/`, `mcp-rag/`, `mcp-docs-search/` и десятки других имён), бывают **вложены** (`ai/mcp-*`, `backend/mcp/`, `scripts/`), на Python или на Node — **нередко оба сразу** (один сервис на Python, другой на JS, тогда и test framework для них разный). А если до MCP/RAG ты в M3-M5 ещё не дошёл — просто отметь это и ревьюй то, что есть (backend-контроллеры, middleware, routes). Не подгоняй под пример — впиши свою реальность.
+
+**Про корневой конфиг:** у разных людей он называется по-разному — `AGENTS.md`, `CLAUDE.md`, оба сразу или вообще никакого. Везде ниже, где написано «AGENTS.md», читай как «твой корневой конфиг». В Stage 3 ты добавишь в него две секции (а если конфига нет — создашь). Симлинк `ln -s CLAUDE.md AGENTS.md` — опционально, если хочешь, чтобы оба имени указывали на один файл.
 
 ---
 
@@ -84,7 +86,7 @@ proshop_mern/homework-m6/
 │   │   ├── adr/                     ← перенесённые из archive важные ADR
 │   │   └── architecture/            ← high-level overview
 │   ├── docs-archived/               ← старая docs/ как была до stage 3
-│   ├── AGENTS-md-diff.md            ← diff AGENTS.md ДО/ПОСЛЕ (новые секции про project-index)
+│   ├── AGENTS.md (или CLAUDE.md)    ← копия корневого конфига с двумя новыми секциями
 │   └── hook-screenshot.png          ← (опц.) hook сработал [update-index hook] ✅
 └── stage4-tests-agent/
     ├── test-writer-mate.md          ← новое agent definition (копия из .claude/agents/)
@@ -483,7 +485,8 @@ PROJECT CONTEXT  (← подставь свои значения из Шага 0
 - Repo: proshop_mern fork (MERN e-commerce + твои MCP/RAG/feature-flags слои из M3-M5)
 - Type: fullstack-monorepo
 - Stack: Node + Express + Mongoose + MongoDB + React + <твой MCP-сервер: Python или Node> + <твой RAG-сервер>
-- Subprojects to discover yourself: backend/, frontend/, <твой MCP>, <твой RAG>, possibly others
+- Subprojects to discover yourself: backend/, frontend/, <твой MCP>, <твой RAG>, possibly others.
+  ⚠️ MCP/RAG могут быть top-level, вложены (ai/, backend/, scripts/, .codex/), или вовсе отсутствовать — walk всё дерево, не ограничивайся top-level
 - Existing docs: ищи сам — могут быть в docs/, в project-data/, или в корне (audit carefully, don't trash)
 - Audit scope: my M3-M5 modules (backend/controllers + <твой MCP> + <твой RAG> + feature-flags layer)
 - Output directory: homework-m6/stage3-living-docs/  ← all reports + plan + docs-audit go here
@@ -663,7 +666,7 @@ python3 .claude/scripts/update_project_index.py
 
 #### Шаг 3.6 — Обновить корневой AI-конфиг (AGENTS.md ИЛИ CLAUDE.md) (CC делает в рамках плана)
 
-> Если у тебя нет `AGENTS.md`, а есть `CLAUDE.md` — либо заведи симлинк `ln -s CLAUDE.md AGENTS.md` (тогда секции лягут на оба), либо добавляй секции прямо в `CLAUDE.md`. Будь последователен: куда добавил секции, по тому файлу и снимай diff в Шаге 3.7.
+> Если у тебя нет `AGENTS.md`, а есть `CLAUDE.md` — добавляй секции прямо в `CLAUDE.md`. Если нет вообще никакого корневого конфига — создай его (`AGENTS.md` или `CLAUDE.md`). Главное — чтобы обе секции реально были в корневом конфиге; это и проверяется в чеклисте (никакой diff сдавать не нужно).
 
 CC добавит две секции в начало твоего корневого конфига:
 
@@ -702,9 +705,8 @@ cp .claude/scripts/update_project_index.py homework-m6/stage3-living-docs/
 # твоя НОВАЯ docs-структура (та, что собрал auditor) → docs-new/:
 cp -r docs/ homework-m6/stage3-living-docs/docs-new/
 mv docs-archived-* homework-m6/stage3-living-docs/docs-archived/  # если ещё не было
-# diff корневого конфига (тот файл, куда добавил секции в Шаге 3.6):
-git diff HEAD~ AGENTS.md > homework-m6/stage3-living-docs/AGENTS-md-diff.md
-# ↑ если у тебя CLAUDE.md (нет AGENTS.md) — замени AGENTS.md на CLAUDE.md в строке выше
+# Копию обновлённого корневого конфига (AGENTS.md ИЛИ CLAUDE.md) — для проверки секций:
+cp AGENTS.md homework-m6/stage3-living-docs/ 2>/dev/null || cp CLAUDE.md homework-m6/stage3-living-docs/
 ```
 
 ### Recipe-ссылки
@@ -726,7 +728,7 @@ git diff HEAD~ AGENTS.md > homework-m6/stage3-living-docs/AGENTS-md-diff.md
 - [ ] `homework-m6/stage3-living-docs/update_project_index.py`
 - [ ] `homework-m6/stage3-living-docs/docs-new/` (содержит README + specs + adr + architecture)
 - [ ] `homework-m6/stage3-living-docs/docs-archived/` (старая docs)
-- [ ] `homework-m6/stage3-living-docs/AGENTS-md-diff.md`
+- [ ] `homework-m6/stage3-living-docs/AGENTS.md` (или `CLAUDE.md`) — копия корневого конфига с новыми секциями
 - [ ] (опц.) `homework-m6/stage3-living-docs/hook-screenshot.png`
 
 #### project-index.json содержит
