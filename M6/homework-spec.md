@@ -51,13 +51,13 @@
 | Язык MCP/RAG | Python **или** Node/JS | `<...>` |
 | Test framework | `pytest` (Python) / `jest` (JS) | `<...>` |
 | Mutation tool (опц.) | `mutmut` (Python) / `stryker` (JS) | `<...>` |
-| Корневой AI-конфиг | `AGENTS.md` **или** `CLAUDE.md` (read first) | `<...>` |
+| Файл правил твоего AI-агента | Claude: `AGENTS.md` / `CLAUDE.md` (бывает в `.claude/`) · Cursor: `.cursor/rules/*.mdc` или `.cursorrules` · Copilot: `.github/copilot-instructions.md` · Codex: `.codex/` · OpenCode: `opencode.json` | `<...>` |
 | Папка существующих docs | `docs/` **или** `project-data/` | `<...>` |
 | Папка ADR | `docs/adr/` **или** `project-data/adrs/` | `<...>` |
 
 **Про MCP/RAG-сервисы:** их расположение у всех разное — бывают top-level (`mcp/`, `mcp-servers/`, `mcp-feature-flags/`, `mcp-rag/`, `mcp-docs-search/` и десятки других имён), бывают **вложены** (`ai/mcp-*`, `backend/mcp/`, `scripts/`), на Python или на Node — **нередко оба сразу** (один сервис на Python, другой на JS, тогда и test framework для них разный). А если до MCP/RAG ты в M3-M5 ещё не дошёл — просто отметь это и ревьюй то, что есть (backend-контроллеры, middleware, routes). Не подгоняй под пример — впиши свою реальность.
 
-**Про корневой конфиг:** у разных людей он называется по-разному — `AGENTS.md`, `CLAUDE.md`, оба сразу или вообще никакого. Везде ниже, где написано «AGENTS.md», читай как «твой корневой конфиг». В Stage 3 ты добавишь в него две секции (а если конфига нет — создашь). Симлинк `ln -s CLAUDE.md AGENTS.md` — опционально, если хочешь, чтобы оба имени указывали на один файл.
+**Про файл правил агента:** где лежат твои правила — зависит от инструмента: **Claude** — `AGENTS.md`/`CLAUDE.md` (иногда в `.claude/`), **Cursor** — `.cursor/rules/*.mdc` или `.cursorrules`, **Copilot** — `.github/copilot-instructions.md`, **Codex** — `.codex/`, **OpenCode** — `opencode.json`. Везде ниже, где написано «AGENTS.md», читай как «твой главный файл правил». В Stage 3 ты добавишь в него две секции (а если такого файла нет — создашь подходящий твоему агенту). Симлинк `ln -s CLAUDE.md AGENTS.md` — опционально.
 
 ---
 
@@ -126,7 +126,7 @@ Use the Agent tool to spawn security-mate from .claude/agents/security-mate.md.
 PROJECT CONTEXT  (← подставь свои значения из Шага 0)
 - Repo: proshop_mern fork (MERN e-commerce + твои MCP / RAG / feature-flags слои из M3-M5)
 - Stack: Node + Express + Mongoose + MongoDB + React + <твой MCP-сервер: Python или Node> + <твой RAG-сервер>
-- Корневой AI-конфиг at root (read first): <AGENTS.md ИЛИ CLAUDE.md>
+- Файл правил агента (read first): <AGENTS.md / CLAUDE.md / .cursor/rules / .github/copilot-instructions.md / .codex/ …>
 - ADRs at <твоя ADR-папка: docs/adr/ ИЛИ project-data/adrs/> if present (read first)
 - Auth model: JWT-based, password hashing via bcrypt
 
@@ -666,7 +666,7 @@ python3 .claude/scripts/update_project_index.py
 
 #### Шаг 3.6 — Обновить корневой AI-конфиг (AGENTS.md ИЛИ CLAUDE.md) (CC делает в рамках плана)
 
-> Если у тебя нет `AGENTS.md`, а есть `CLAUDE.md` — добавляй секции прямо в `CLAUDE.md`. Если нет вообще никакого корневого конфига — создай его (`AGENTS.md` или `CLAUDE.md`). Главное — чтобы обе секции реально были в корневом конфиге; это и проверяется в чеклисте (никакой diff сдавать не нужно).
+> Добавляй секции в свой файл правил агента из Шага 0 (`CLAUDE.md`/`AGENTS.md`, `.cursor/rules/`, `.github/copilot-instructions.md`, `.codex/`, `opencode.json`…). Нет такого файла — создай подходящий твоему инструменту. Главное — чтобы обе секции реально присутствовали; это и проверяется в чеклисте (никакой diff сдавать не нужно).
 
 CC добавит две секции в начало твоего корневого конфига:
 
@@ -705,8 +705,9 @@ cp .claude/scripts/update_project_index.py homework-m6/stage3-living-docs/
 # твоя НОВАЯ docs-структура (та, что собрал auditor) → docs-new/:
 cp -r docs/ homework-m6/stage3-living-docs/docs-new/
 mv docs-archived-* homework-m6/stage3-living-docs/docs-archived/  # если ещё не было
-# Копию обновлённого корневого конфига (AGENTS.md ИЛИ CLAUDE.md) — для проверки секций:
-cp AGENTS.md homework-m6/stage3-living-docs/ 2>/dev/null || cp CLAUDE.md homework-m6/stage3-living-docs/
+# Копию обновлённого файла правил агента — для проверки секций (подставь свой путь из Шага 0):
+#   например: cp AGENTS.md ...  |  cp CLAUDE.md ...  |  cp .github/copilot-instructions.md ...  |  cp -r .cursor/rules ...
+cp AGENTS.md homework-m6/stage3-living-docs/ 2>/dev/null || cp CLAUDE.md homework-m6/stage3-living-docs/ 2>/dev/null || true
 ```
 
 ### Recipe-ссылки
@@ -728,7 +729,7 @@ cp AGENTS.md homework-m6/stage3-living-docs/ 2>/dev/null || cp CLAUDE.md homewor
 - [ ] `homework-m6/stage3-living-docs/update_project_index.py`
 - [ ] `homework-m6/stage3-living-docs/docs-new/` (содержит README + specs + adr + architecture)
 - [ ] `homework-m6/stage3-living-docs/docs-archived/` (старая docs)
-- [ ] `homework-m6/stage3-living-docs/AGENTS.md` (или `CLAUDE.md`) — копия корневого конфига с новыми секциями
+- [ ] `homework-m6/stage3-living-docs/` — копия твоего файла правил агента (AGENTS.md / CLAUDE.md / copilot-instructions.md / …) с новыми секциями
 - [ ] (опц.) `homework-m6/stage3-living-docs/hook-screenshot.png`
 
 #### project-index.json содержит
@@ -760,11 +761,11 @@ cp AGENTS.md homework-m6/stage3-living-docs/ 2>/dev/null || cp CLAUDE.md homewor
 - [ ] `.claude/settings.json` (или `.local.json`) содержит `hooks.PostToolUse`
 - [ ] Hook сработал хотя бы 1 раз (screenshot в submission)
 
-#### Корневой AI-конфиг (AGENTS.md ИЛИ CLAUDE.md)
+#### Файл правил агента (AGENTS.md / CLAUDE.md / .cursor/rules / copilot-instructions.md / …)
 
 - [ ] Секция «⭐ START HERE» добавлена
 - [ ] Секция «⭐ Keeping project-index.json current» добавлена
-- [ ] Размер конфига по-прежнему разумный (≤ ~250 строк, не разрослось)
+- [ ] Размер файла по-прежнему разумный (не разрослось; для односекционных типа copilot-instructions — компактно)
 
 #### Архив
 
