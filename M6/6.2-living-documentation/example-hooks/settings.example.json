@@ -3,7 +3,7 @@
   "_comment_2": "В Claude Code НЕТ отдельной папки .claude/hooks/. Хук = JSON-конфиг ниже.",
   "_comment_3": "Каждый hook = (matcher) + (команда которую CC запустит когда matcher сработал).",
   "_comment_4": "Положи этот файл (без _comment_* ключей) в .claude/settings.json своего fork`а.",
-  "_comment_5": "Подробное описание событий и payload: https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/hooks",
+  "_comment_5": "Подробное описание событий и payload: https://code.claude.com/docs/en/hooks",
 
   "env": {
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"

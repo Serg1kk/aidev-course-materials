@@ -347,4 +347,4 @@ exit 0
 - [`README.md`](README.md) — overview всех 8 типов hooks
 - [`../example-hooks/`](../example-hooks/) — наш production-ready пример project-index hook
 - [`../keeping-docs-current.md`](../keeping-docs-current.md) — 3 уровня enforcement через hooks + git + CI
-- Официальная дока: https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/hooks
+- Официальная дока: https://code.claude.com/docs/en/hooks

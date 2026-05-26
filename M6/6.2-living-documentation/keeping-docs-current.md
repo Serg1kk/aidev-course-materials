@@ -479,7 +479,7 @@ jobs:
 
 ## Дополнительные ссылки
 
-- Claude Code hooks docs: https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/hooks
+- Claude Code hooks docs: https://code.claude.com/docs/en/hooks
 - Husky (git hooks для команды): https://github.com/typicode/husky
 - Cursor rules format: https://docs.cursor.com/context/rules
 - GitHub Copilot custom instructions: https://docs.github.com/en/copilot/customizing-copilot

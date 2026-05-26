@@ -243,6 +243,6 @@ You: "Create backend/services/orderService.js"
 
 ## Дополнительные ссылки
 
-- Claude Code hooks (official docs): https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/hooks
+- Claude Code hooks (official docs): https://code.claude.com/docs/en/hooks
 - Claude Code settings reference: https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/settings
 - AGENTS.md spec: https://agentsmd.com
