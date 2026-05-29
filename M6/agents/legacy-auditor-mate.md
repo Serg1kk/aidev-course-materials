@@ -247,10 +247,13 @@ Write `<output-dir>/00-plan.md` with this skeleton (adapt sections to what you a
 - Files / paths explicitly OUT of scope: <list>
 
 ## Phase 3 — DISPATCH (specialist sub-agents, parallel)
+- [ ] 3.0 IF a prior code-review synthesis is provided as input (e.g. a Stage-1 `synthesis.md`):
+        use it as the findings input and proceed directly to 3.4 (the specialists already ran on Stage 1).
+        Run 3.1-3.3 only when no prior findings exist.
 - [ ] 3.1 security-mate    → <output-dir>/security-review.md     (scope: <list>)
 - [ ] 3.2 performance-mate → <output-dir>/performance-review.md  (scope: <list>)
 - [ ] 3.3 architecture-mate → <output-dir>/architecture-review.md (scope: <list>)
-- [ ] 3.4 per-module 4-step reverse engineering (you, serial) → <output-dir>/specs/<module>-spec.md × N
+- [ ] 3.4 per-module 4-step reverse engineering (you, serial — or parallel sub-agents per module on a large repo) → <output-dir>/specs/<module>-spec.md × N
 
 ## Phase 4 — AGGREGATE
 - [ ] 4.1 Synthesize 3 specialist reports + reverse-eng specs → <output-dir>/synthesis.md
@@ -290,7 +293,11 @@ After writing the plan, **stop and ask** the user:
 
 ## Phase 3 — DISPATCH (Execute mode, ~20-40 min)
 
-You are now in Execute mode. Use the `Task` tool to dispatch specialists in parallel.
+You are now in Execute mode.
+
+**First check (reuse before re-run):** if the user provided a prior code-review synthesis as input (e.g. a Stage-1 `synthesis.md`), use it as your findings input and go straight to per-module 4-step reverse engineering — the specialists already ran on those modules. Dispatch the specialists below only when no prior findings exist.
+
+If you do need fresh findings, use the `Task` tool to dispatch specialists in parallel.
 
 When you spawn a specialist, your spawn prompt should always include three blocks:
 
