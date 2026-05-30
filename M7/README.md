@@ -19,7 +19,7 @@
 
 | Папка / файл | Что внутри |
 |---|---|
-| `homework-spec.md` | **Главный файл — домашка-капстоун** «AI Transformation Blueprint (lite)», ~1.5-2ч на своём `proshop_mern` (безопасность → стек → ROI → план внедрения) |
+| [`homework/`](https://github.com/Serg1kk/aidev-course-materials/tree/main/M7/homework) | **Домашка-капстоун M7** — приватный AI-ассистент с роутером по чувствительности (+ инъекции) на своём `proshop_mern`. Старт: [`homework/homework-spec.md`](https://github.com/Serg1kk/aidev-course-materials/blob/main/M7/homework/homework-spec.md) |
 | `ai-readiness-self-assessment.md` | 🎁 Шаблон для себя (не сдаётся): карта реальности + decision-tree под ТВОЮ компанию — переложить blueprint на реальную работу |
 | `7.1-security/` | Классификация данных, security-чеклист, локалки + инференс-стек + 152-ФЗ, каталог атак + OWASP + guardrails, compliance-таймлайны |
 | `7.2-economics/` | Pricing 2026 + deprecation, cost-optimization (кэш/routing/self-host), фреймворки + fine-tuning экономика |

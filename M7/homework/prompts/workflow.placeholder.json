@@ -1,0 +1,16 @@
+{
+  "name": "PLACEHOLDER — AI Privacy Router (replace with your real n8n export)",
+  "_note": "Это ПЛЕЙСХОЛДЕР. Собери workflow по prompts/02-n8n-router.md (ASCII-схема), затем в n8n: ⋯ → Download, и замени этим файлом содержимое здесь / в homework-m7/router/workflow.json. Структура нод ниже — ориентир, не рабочий импорт.",
+  "_intended_nodes": [
+    { "node": "Webhook", "purpose": "POST /chat, вход { userId, message } (+ JWT)" },
+    { "node": "PII detect", "purpose": "ОДИН из: HTTP→Presidio /analyze | AI-нода-классификатор | Code-нода regex; выдаёт piiEntities[]" },
+    { "node": "IF", "purpose": "piiEntities.length > 0 ? local : cloud" },
+    { "node": "AI Agent (LOCAL)", "purpose": "локальная модель + scoped DB-тулы (getProducts, getMyOrders(userId), getMyProfile(userId))" },
+    { "node": "AI Agent (CLOUD)", "purpose": "облачная модель (OpenRouter/API) + те же scoped DB-тулы" },
+    { "node": "MongoDB", "purpose": "insert в chatlogs: createdAt,userId,message,piiEntities,route,model,reply,latencyMs,costUsd" },
+    { "node": "Respond to Webhook", "purpose": "вернуть { reply }" }
+  ],
+  "_security_note": "Тулы агента ОБЯЗАТЕЛЬНО scoped по userId из Webhook ({{ $json.body.userId }}), не из текста модели. Это база защиты DZ2.",
+  "nodes": [],
+  "connections": {}
+}

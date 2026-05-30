@@ -2,3 +2,12 @@
 
 # Pre-review homework draft — kept local until SG review (contains draft notes)
 new-homework/
+
+# SG-private files — never commit even if placed in a tracked module folder
+**/_DRAFT-*
+**/_SG-*
+**/_ARCHIVED-*
+**/*-for-SG.md
+
+# Archive of stale drafts (contains student names in old _DRAFT) — never commit
+/archive/
