@@ -25,8 +25,8 @@
 | `6.2-living-documentation/` | Topic 6.2: Living Documentation, AGENTS.md/CLAUDE.md, inline comments, project-index.json |
 | `6.3-legacy-strategies/` | Topic 6.3: Стратегии работы с legacy. 4-step CC reverse engineering + 7 правил безопасного refactor |
 | `6.4-synthetic-testing/` | Topic 6.4: Synthetic testing, mutation testing, coverage vs MSI, CI/CD layered strategy |
-| `resources/glossary.md` | Глоссарий: PBT, MSI, Agent Team, ADR, characterization tests, strangler fig |
-| `resources/tools-catalog.md` | Единый каталог инструментов M6 со ссылками на их docs / pricing |
+
+Каталог инструментов M6 со ссылками на docs / pricing — в `6.1-ai-code-review/tools-catalog.md`.
 
 ## Pre-read до занятия
 

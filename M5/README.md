@@ -19,7 +19,7 @@
 | `guides/browser-use-prompt-injection-defenses.md` | Отдельный security-reference: как защищают от prompt injection в browser-агентах (теория, не про домашку, читать опционально) |
 | `guides/crewai-vs-n8n.md` | Сравнение CrewAI и n8n: когда что выбирать, гибридный паттерн |
 | `guides/cloud-n8n-local-services.md` | **Если ваш n8n в облаке, а MCP/Dashboard/logs локально:** как пробросить локальные сервисы публичным HTTPS через Cloudflare quick tunnel. Docker Compose-фрагмент + примеры нод. Не часть требований домашки — справочник для совпадающего сценария. |
-| `n8n Workflows/` | External community templates для самостоятельного изучения (awesome-n8n-templates, n8n-workflows). Не относится к сдаче — reference. |
+| `n8n Workflows/` | Справочные коллекции workflow для самостоятельного изучения: ссылки на upstream-репозитории (awesome-n8n-templates, n8n-workflows) + локальная подборка из community-таблицы. Не относится к сдаче — reference. См. `n8n Workflows/README.md`. |
 
 ## Pre-read до занятия
 

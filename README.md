@@ -79,7 +79,7 @@
 - **[6.1 AI Code Review](M6/6.1-ai-code-review/README.md)** — эталонная архитектура review (webhook → LLM → CI/CD), сравнение тулов, honest risks.
 - **[6.2 Living Documentation](M6/6.2-living-documentation/README.md)** — AGENTS.md/CLAUDE.md стандарт, project-index.json, борьба с RAG freshness rot.
 - **[6.3 Legacy-стратегии](M6/6.3-legacy-strategies/README.md)** — 4-step CC reverse engineering + 7 правил безопасного рефакторинга.
-- **[6.4 Synthetic testing](M6/6.4-synthetic-testing/README.md)** — synthetic test-cases, mutation testing, coverage vs MSI, CI/CD layered. + **[глоссарий](M6/resources/glossary.md)** / **[каталог тулов](M6/resources/tools-catalog.md)**.
+- **[6.4 Synthetic testing](M6/6.4-synthetic-testing/README.md)** — synthetic test-cases, mutation testing, coverage vs MSI, CI/CD layered. + **[каталог тулов](M6/6.1-ai-code-review/tools-catalog.md)**.
 
 ### M7 — Стратегия: безопасность, экономика, внедрение
 
